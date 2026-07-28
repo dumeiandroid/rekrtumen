@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
-<title>Rekrutmen Sales & Marketing - Lidan Psikologi</title>
+<title>Rekrutmen Sales & Marketing / Business Development - Lidan Psikologi</title>
 <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
 <style>
 :root{
@@ -126,8 +126,8 @@ body{background:var(--bg);color:var(--dark);}
     <div class="head-row">
       <div class="head-icon">🧠</div>
       <div>
-        <h1>Rekrutmen Sales &amp; Marketing</h1>
-        <p>Lidan Psikologi</p>
+        <h1 id="headTitle">Rekrutmen Sales &amp; Marketing / Business Development</h1>
+        <p id="headSub">Lidan Psikologi &middot; 2 posisi terbuka</p>
       </div>
     </div>
     <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:5%;"></div></div>
@@ -355,6 +355,36 @@ function showPage(id){
 function setProgFill(pct){ document.getElementById('progFill').style.width = pct+'%'; }
 function nowIso(){ return new Date().toISOString(); }
 
+/* ==============================
+   HEADER DINAMIS (form ini melayani 2 posisi sekaligus)
+   ============================== */
+function labelPosisi(v){ return v==='bdo' ? 'Business Development Officer' : 'Sales & Marketing Executive'; }
+
+function updateHeaderPosisi(posisiArr){
+  const title = document.getElementById('headTitle');
+  const sub = document.getElementById('headSub');
+  const arr = posisiArr || [];
+  if(arr.length === 0){
+    title.textContent = 'Rekrutmen Sales & Marketing / Business Development';
+    sub.textContent = 'Lidan Psikologi · 2 posisi terbuka';
+  } else if(arr.length >= 2){
+    title.textContent = 'Rekrutmen Sales & Marketing Executive & BD Officer';
+    sub.textContent = 'Lidan Psikologi · Melamar untuk 2 posisi';
+  } else {
+    title.textContent = 'Rekrutmen ' + labelPosisi(arr[0]);
+    sub.textContent = 'Lidan Psikologi · Melamar sebagai ' + labelPosisi(arr[0]);
+  }
+}
+
+function pasangListenerPosisi(){
+  document.querySelectorAll('.b_posisi_chk').forEach(chk=>{
+    chk.addEventListener('change', ()=>{
+      const checked = Array.from(document.querySelectorAll('.b_posisi_chk:checked')).map(c=>c.value);
+      updateHeaderPosisi(checked);
+    });
+  });
+}
+
 /* Cegah paste di semua input/textarea */
 function noPaste(el){
   el.addEventListener('paste', e=>{ e.preventDefault(); return false; });
@@ -472,6 +502,7 @@ window.onload = function(){
     document.getElementById('ovResume').classList.add('open');
   }
   document.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea').forEach(noPaste);
+  pasangListenerPosisi();
 };
 
 function labelStep(s){
@@ -487,6 +518,7 @@ function lanjutkanProgress(){
   document.querySelectorAll('.b_posisi_chk').forEach(c=>{ c.checked = (progress.biodata.posisi||[]).includes(c.value); });
   document.getElementById('b_pendidikan').value = progress.biodata.pendidikan||'';
   document.getElementById('b_domisili').value = progress.biodata.domisili||'';
+  updateHeaderPosisi(progress.biodata.posisi||[]);
 
   if(progress.step === 'soal'){
     bangunDaftarSoal();
@@ -504,6 +536,8 @@ function mulaiBaruProgress(){
   document.getElementById('ovResume').classList.remove('open');
   hapusLokal();
   progress = { id_x:null, step:'intro', biodata:{nama:'',hp:'',email:'',posisi:[],pendidikan:'',domisili:''}, foto:null, jawaban:{}, soalIndex:0, pelanggaran:{count:0,log:[]}, waktu:{mulai:null,selesai:null} };
+  document.querySelectorAll('.b_posisi_chk').forEach(c=>{ c.checked = false; });
+  updateHeaderPosisi([]);
 }
 
 /* ==============================
@@ -542,6 +576,7 @@ function simpanBiodata(){
   if(!ok) return;
 
   progress.biodata = { nama, hp, email, posisi, pendidikan, domisili };
+  updateHeaderPosisi(posisi);
   progress.step = 'foto';
   simpanLokal();
   jadwalkanSync(200);
