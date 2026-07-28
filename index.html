@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Rekrutmen Sales & Marketing - Lidan Psikologi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#5b5ef4; --p2:#7c3aed; --blue:#0ea5e9; --green:#10b981; --orange:#f59e0b; --red:#ef4444;
+  --dark:#0f172a; --muted:#64748b; --border:#e2e8f0; --bg:#f8fafc; --white:#fff;
+}
+*{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--dark);}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh;background:var(--white);box-shadow:0 0 40px rgba(0,0,0,0.04);}
+
+/* ===== HEADER ===== */
+.head{background:linear-gradient(135deg,#0f172a 0%,#312e81 60%,#5b5ef4 100%);color:#fff;padding:22px 20px;position:sticky;top:0;z-index:50;}
+.head-row{display:flex;align-items:center;gap:12px;}
+.head-icon{width:44px;height:44px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.head h1{font-size:16px;font-weight:900;letter-spacing:-0.3px;}
+.head p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+.progress-bar{height:4px;background:rgba(255,255,255,0.15);border-radius:3px;margin-top:14px;overflow:hidden;}
+.progress-fill{height:100%;background:linear-gradient(90deg,#5b5ef4,#a5b4fc);border-radius:3px;transition:width 0.3s;}
+
+/* ===== PAGES ===== */
+.page{display:none;padding:24px 20px 100px;}
+.page.active{display:block;}
+
+/* ===== INTRO ===== */
+.intro-logo{width:60px;height:60px;background:linear-gradient(135deg,#5b5ef4,#7c3aed);border-radius:16px;display:flex;align-items:center;justify-content:center;font-size:28px;margin-bottom:18px;box-shadow:0 8px 20px rgba(91,94,244,0.3);}
+.intro h2{font-size:20px;font-weight:900;margin-bottom:10px;letter-spacing:-0.4px;}
+.intro p{font-size:14px;color:var(--muted);line-height:1.7;margin-bottom:14px;}
+.intro-box{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin:18px 0;}
+.intro-box h3{font-size:13px;font-weight:800;margin-bottom:8px;color:var(--primary);}
+.intro-box ul{padding-left:18px;font-size:13px;color:var(--muted);line-height:1.8;}
+.notice{background:#fff7ed;border:1px solid #fed7aa;border-radius:12px;padding:14px 16px;font-size:12.5px;color:#9a3412;line-height:1.7;margin:16px 0;}
+.notice b{display:block;margin-bottom:4px;}
+
+/* ===== FORM ===== */
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:12px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.fg .hint{font-size:11px;color:var(--muted);font-weight:500;margin-top:4px;}
+.fg input[type=text],.fg input[type=email],.fg input[type=tel],.fg select,.fg textarea{
+  width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;font-family:inherit;color:var(--dark);background:var(--white);transition:0.15s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,94,244,0.1);}
+.fg textarea{resize:vertical;min-height:90px;line-height:1.6;}
+.fg.err input,.fg.err textarea,.fg.err select{border-color:var(--red);}
+.fg-errmsg{font-size:11px;color:var(--red);font-weight:700;margin-top:5px;display:none;}
+.fg.err .fg-errmsg{display:block;}
+.chk-row{display:flex;align-items:center;gap:9px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13.5px;font-weight:600;margin-bottom:8px;cursor:pointer;transition:0.15s;}
+.chk-row:has(input:checked){border-color:var(--primary);background:rgba(91,94,244,0.06);}
+.chk-row input{width:17px;height:17px;accent-color:var(--primary);flex-shrink:0;}
+
+/* ===== SECTION SOAL ===== */
+.sec-block{margin-bottom:26px;}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bg);}
+.sec-num{width:28px;height:28px;background:var(--primary);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
+.sec-head h3{font-size:14.5px;font-weight:800;letter-spacing:-0.2px;}
+.q-count{font-size:10px;color:var(--muted);font-weight:700;background:var(--bg);padding:2px 8px;border-radius:20px;margin-left:auto;}
+.qmeta{margin-bottom:18px;}
+.qmeta-top{display:flex;align-items:center;justify-content:space-between;margin-bottom:8px;}
+.qmeta-top span:first-child{font-size:12px;font-weight:800;color:var(--primary);}
+.qmeta-top span:last-child{font-size:11px;font-weight:700;color:var(--muted);background:var(--bg);padding:3px 9px;border-radius:20px;}
+.qprog-bar{height:5px;background:var(--bg);border-radius:4px;overflow:hidden;}
+.qprog-fill{height:100%;background:linear-gradient(90deg,#5b5ef4,#7c3aed);border-radius:4px;transition:width 0.25s;}
+#fg_current label{font-size:15px;font-weight:800;line-height:1.5;margin-bottom:12px;}
+#fg_current textarea{min-height:160px;}
+
+/* ===== BUTTONS ===== */
+.btn{width:100%;padding:14px;border:none;border-radius:11px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:0.15s;}
+.btn-primary{background:linear-gradient(135deg,#5b5ef4,#7c3aed);color:#fff;box-shadow:0 6px 16px rgba(91,94,244,0.3);}
+.btn-primary:hover{transform:translateY(-1px);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;transform:none;}
+.btn-outline{background:var(--white);color:var(--muted);border:1.5px solid var(--border);}
+.btn-green{background:linear-gradient(135deg,#10b981,#059669);color:#fff;box-shadow:0 6px 16px rgba(16,185,129,0.3);}
+.btn-row{display:flex;gap:10px;margin-top:20px;}
+
+/* ===== FOTO ===== */
+.cam-frame{width:100%;aspect-ratio:3/4;background:#000;border-radius:16px;overflow:hidden;position:relative;margin-bottom:16px;}
+.cam-frame video,.cam-frame img{width:100%;height:100%;object-fit:cover;}
+.cam-tip{font-size:12px;color:var(--muted);text-align:center;margin-bottom:16px;line-height:1.6;}
+
+/* ===== SAVE INDICATOR ===== */
+.save-ind{position:fixed;bottom:0;left:0;right:0;max-width:640px;margin:0 auto;background:var(--white);border-top:1px solid var(--border);padding:10px 20px;display:flex;align-items:center;gap:8px;font-size:11px;color:var(--muted);font-weight:700;z-index:40;}
+.save-dot{width:7px;height:7px;border-radius:50%;background:var(--green);flex-shrink:0;}
+.save-dot.pending{background:var(--orange);animation:pulse 1s infinite;}
+.save-dot.offline{background:var(--red);}
+@keyframes pulse{0%,100%{opacity:1;}50%{opacity:0.3;}}
+
+/* ===== WARNING BADGE (pelanggaran) ===== */
+.viol-badge{position:sticky;top:96px;z-index:45;background:#fef2f2;border:1.5px solid #fecaca;color:#b91c1c;border-radius:10px;padding:9px 12px;font-size:11.5px;font-weight:700;margin-bottom:16px;display:none;align-items:center;gap:8px;}
+.viol-badge.show{display:flex;}
+
+/* ===== OVERLAY / MODAL ===== */
+.overlay{position:fixed;inset:0;background:rgba(15,23,42,0.6);backdrop-filter:blur(3px);z-index:9000;display:none;align-items:center;justify-content:center;padding:20px;}
+.overlay.open{display:flex;}
+.modal-box{background:#fff;border-radius:18px;padding:26px 22px;max-width:380px;width:100%;box-shadow:0 30px 60px rgba(0,0,0,0.3);}
+.modal-box .ic{font-size:32px;margin-bottom:10px;}
+.modal-box h3{font-size:16px;font-weight:900;margin-bottom:8px;}
+.modal-box p{font-size:13px;color:var(--muted);line-height:1.6;margin-bottom:18px;}
+.modal-box.warn{border-top:4px solid var(--red);}
+
+/* ===== DONE PAGE ===== */
+.done-wrap{text-align:center;padding-top:40px;}
+.done-icon{width:80px;height:80px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 20px;box-shadow:0 10px 30px rgba(16,185,129,0.3);}
+.done-wrap h2{font-size:19px;font-weight:900;margin-bottom:10px;}
+.done-wrap p{font-size:13.5px;color:var(--muted);line-height:1.7;}
+
+/* ===== LOADER ===== */
+#gLoader{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:9500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+#gLoader.on{display:flex;}
+.spin{width:30px;height:30px;border:3px solid #e2e8f0;border-top-color:var(--primary);border-radius:50%;animation:rot 0.7s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg);}}
+#gLoaderTxt{font-size:12.5px;font-weight:700;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div id="gLoader"><div class="spin"></div><div id="gLoaderTxt">Memuat...</div></div>
+
+<div class="wrap">
+
+  <div class="head">
+    <div class="head-row">
+      <div class="head-icon">🧠</div>
+      <div>
+        <h1>Rekrutmen Sales &amp; Marketing</h1>
+        <p>Lidan Psikologi</p>
+      </div>
+    </div>
+    <div class="progress-bar"><div class="progress-fill" id="progFill" style="width:5%;"></div></div>
+  </div>
+
+  <!-- ===================== INTRO ===================== -->
+  <div class="page active" id="pgIntro">
+    <div class="intro-logo">🧠</div>
+    <h2>Tentang Lidan Psikologi</h2>
+    <p>Lidan Psikologi (PT Lidan Indah Abadi) adalah biro layanan psikologi yang menyediakan jasa <b>tes minat bakat</b>, <b>tes penjurusan &amp; pemetaan karier</b>, <b>asesmen psikologi karyawan/rekrutmen</b>, <b>konseling</b>, serta <b>pelatihan/training psikologi</b>. Klien kami mencakup sekolah, kampus/perguruan tinggi, dan perusahaan/instansi.</p>
+
+    <div class="intro-box">
+      <h3>Formulir ini untuk posisi:</h3>
+      <ul>
+        <li>Sales &amp; Marketing Executive</li>
+        <li>Business Development Officer</li>
+      </ul>
+    </div>
+
+    <p>Isi dengan jujur berdasarkan pengalaman dan pemahaman Anda sendiri. Sebagian soal tidak memiliki jawaban benar/salah mutlak — kami ingin melihat cara berpikir dan pendekatan Anda.</p>
+
+    <div class="notice">
+      <b>⚠️ Perhatian sebelum mengisi</b>
+      Isian jawaban hanya boleh diketik langsung (fitur salin-tempel/paste dinonaktifkan). Sistem juga mencatat apabila Anda meninggalkan/berpindah tab browser selama mengerjakan soal. Progres pengisian Anda tersimpan otomatis di perangkat ini, sehingga jika koneksi terputus Anda dapat melanjutkan dari titik terakhir.
+    </div>
+
+    <button class="btn btn-primary" onclick="mulaiForm()">Mulai Pengisian →</button>
+  </div>
+
+  <!-- ===================== BIODATA ===================== -->
+  <div class="page" id="pgBiodata">
+    <h2 style="font-size:18px;font-weight:900;margin-bottom:4px;">Data Diri</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:20px;">Lengkapi data berikut sesuai identitas Anda.</p>
+
+    <div class="fg" id="fg_nama">
+      <label>Nama Lengkap</label>
+      <input type="text" id="b_nama" placeholder="Ketik nama lengkap Anda...">
+      <div class="fg-errmsg">Nama wajib diisi</div>
+    </div>
+    <div class="fg" id="fg_hp">
+      <label>No. HP / WhatsApp Aktif</label>
+      <input type="tel" id="b_hp" placeholder="08xxxxxxxxxx">
+      <div class="fg-errmsg">No. HP wajib diisi</div>
+    </div>
+    <div class="fg" id="fg_email">
+      <label>Email Aktif</label>
+      <input type="email" id="b_email" placeholder="nama@email.com">
+      <div class="fg-errmsg">Email wajib diisi dengan format benar</div>
+    </div>
+    <div class="fg" id="fg_posisi">
+      <label>Posisi yang Dilamar</label>
+      <div class="hint" style="margin-top:0;margin-bottom:8px;">Boleh dipilih lebih dari satu jika Anda melamar untuk keduanya.</div>
+      <label class="chk-row"><input type="checkbox" class="b_posisi_chk" value="sme"> Sales &amp; Marketing Executive</label>
+      <label class="chk-row"><input type="checkbox" class="b_posisi_chk" value="bdo"> Business Development Officer</label>
+      <div class="fg-errmsg">Pilih minimal satu posisi</div>
+    </div>
+    <div class="fg" id="fg_pendidikan">
+      <label>Pendidikan Terakhir</label>
+      <input type="text" id="b_pendidikan" placeholder="Contoh: S1 Manajemen">
+      <div class="fg-errmsg">Wajib diisi</div>
+    </div>
+    <div class="fg" id="fg_domisili">
+      <label>Domisili Saat Ini</label>
+      <input type="text" id="b_domisili" placeholder="Contoh: Medan, Sumatera Utara">
+      <div class="fg-errmsg">Wajib diisi</div>
+    </div>
+
+    <button class="btn btn-primary" onclick="simpanBiodata()">Lanjut ke Foto →</button>
+  </div>
+
+  <!-- ===================== FOTO ===================== -->
+  <div class="page" id="pgFoto">
+    <h2 style="font-size:18px;font-weight:900;margin-bottom:4px;">Ambil Foto Diri</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:18px;">Pastikan wajah terlihat jelas dan pencahayaan cukup.</p>
+
+    <div class="cam-frame" id="camFrame">
+      <video id="video" autoplay playsinline></video>
+    </div>
+    <canvas id="canvas" style="display:none;"></canvas>
+    <p class="cam-tip" id="camTip">Posisikan wajah Anda di tengah frame, lalu tekan tombol di bawah untuk mengambil foto.</p>
+
+    <button class="btn btn-primary" id="btnAmbilFoto" onclick="ambilFoto()">📷 Ambil Foto</button>
+    <button class="btn btn-outline" id="btnUlangFoto" style="display:none;margin-top:10px;" onclick="ulangFoto()">↺ Ambil Ulang</button>
+    <button class="btn btn-green" id="btnLanjutSoal" style="display:none;margin-top:10px;" onclick="lanjutKeSoal()">Lanjut ke Soal →</button>
+  </div>
+
+  <!-- ===================== SOAL ===================== -->
+  <div class="page" id="pgSoal">
+    <h2 style="font-size:18px;font-weight:900;margin-bottom:4px;">Pertanyaan Seleksi</h2>
+    <p style="font-size:12.5px;color:var(--muted);margin-bottom:16px;">Jawab seluruh pertanyaan berikut dengan mengetik langsung.</p>
+
+    <div class="viol-badge" id="violBadge">⚠️ <span id="violText"></span></div>
+
+    <div class="qmeta">
+      <div class="qmeta-top"><span id="qSecTitle"></span><span id="qCounter"></span></div>
+      <div class="qprog-bar"><div class="qprog-fill" id="qProgFill" style="width:0%;"></div></div>
+    </div>
+
+    <div class="fg" id="fg_current">
+      <label id="qLabel"></label>
+      <textarea id="taCurrent" placeholder="Ketik jawaban Anda di sini..."></textarea>
+      <div class="fg-errmsg" id="qErrMsg">Jawaban minimal beberapa kata sebelum lanjut</div>
+    </div>
+
+    <div class="btn-row">
+      <button class="btn btn-outline" id="btnBack" onclick="soalBack()">← Kembali</button>
+      <button class="btn btn-primary" id="btnNext" onclick="soalNext()">Lanjut →</button>
+    </div>
+  </div>
+
+  <!-- ===================== DONE ===================== -->
+  <div class="page" id="pgDone">
+    <div class="done-wrap">
+      <div class="done-icon">🎉</div>
+      <h2>Terima Kasih!</h2>
+      <p>Jawaban Anda telah berhasil terkirim ke tim Lidan Psikologi. Kami akan menghubungi Anda melalui WhatsApp/email apabila lolos ke tahap selanjutnya.</p>
+    </div>
+  </div>
+
+</div>
+
+<!-- SAVE INDICATOR -->
+<div class="save-ind" id="saveInd" style="display:none;">
+  <div class="save-dot" id="saveDot"></div>
+  <span id="saveText">Tersimpan otomatis</span>
+</div>
+
+<!-- RESUME PROMPT -->
+<div class="overlay" id="ovResume">
+  <div class="modal-box">
+    <div class="ic">🔄</div>
+    <h3>Lanjutkan Pengisian?</h3>
+    <p id="resumeInfo">Kami menemukan progres pengisian sebelumnya di perangkat ini. Ingin melanjutkan dari titik terakhir, atau mulai baru?</p>
+    <button class="btn btn-primary" onclick="lanjutkanProgress()">Lanjutkan Pengisian</button>
+    <button class="btn btn-outline" style="margin-top:10px;" onclick="mulaiBaruProgress()">Mulai Baru</button>
+  </div>
+</div>
+
+<!-- WARNING MODAL: PINDAH TAB -->
+<div class="overlay" id="ovWarn">
+  <div class="modal-box warn">
+    <div class="ic">🚫</div>
+    <h3>Terdeteksi Meninggalkan Halaman</h3>
+    <p id="warnText">Sistem mendeteksi Anda berpindah tab/aplikasi lain saat mengerjakan soal. Kejadian ini tercatat dan menjadi bagian dari penilaian.</p>
+    <button class="btn btn-primary" onclick="tutupWarn()">Mengerti, Lanjutkan</button>
+  </div>
+</div>
+
+<script>
+/* ==============================
+   KONFIGURASI & KONSTANTA
+   ============================== */
+const API = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis7';
+const R2  = 'https://lidan.co.id/api/upload_r2_lidan';
+const CDN = 'https://assets.lidan.co.id/';
+const KEY = 'admin';
+const TBL = 'rekrutmen';
+const LS_KEY = 'rekrutmen_progress_v1';
+
+/* Daftar pertanyaan, dikelompokkan per bagian.
+   onlyFor: 'bdo' -> hanya tampil jika posisi = Business Development Officer */
+const SOAL_SECTIONS = [
+  { title:'Pemahaman Bisnis & Produk', questions:[
+    {id:'q1', text:'Menurut Anda, apa perbedaan mendasar antara menjual jasa psikologi (seperti tes minat bakat/konseling) dengan menjual produk fisik? Sebutkan minimal 2 tantangan spesifik.'},
+    {id:'q2', text:'Jika Anda harus menjelaskan manfaat "tes minat bakat" kepada kepala sekolah dalam 3 kalimat, apa yang akan Anda katakan?'},
+    {id:'q3', text:'Menurut Anda, apa yang membuat sebuah perusahaan/HRD mau menggunakan jasa asesmen psikologi untuk rekrutmen karyawan, dibanding proses seleksi manual?'},
+    {id:'q4', text:'Sebutkan 3 jenis institusi/lembaga yang menurut Anda paling potensial menjadi klien jasa ini, dan alasannya.'},
+  ]},
+  { title:'Kemampuan & Pendekatan Penjualan', questions:[
+    {id:'q5', text:'Ceritakan pengalaman Anda menjual produk/jasa (boleh apa saja) — apa yang paling sulit dan bagaimana Anda mengatasinya?'},
+    {id:'q6', text:'Jika Anda menghubungi sebuah sekolah dan pihak sekolah menjawab "kami sudah punya guru BK, tidak perlu jasa luar", bagaimana respons Anda?'},
+    {id:'q7', text:'Bagaimana cara Anda menyusun target harian/mingguan untuk mencari klien baru jika belum punya database sama sekali?'},
+    {id:'q8', text:'Sebutkan minimal 2 platform/cara yang akan Anda gunakan untuk mencari calon klien secara online, dan 2 cara offline.'},
+  ]},
+  { title:'Relasi & Jaringan', questions:[
+    {id:'q9', text:'Apakah Anda memiliki relasi/kenalan di lingkungan sekolah, kampus, atau HRD perusahaan saat ini? Sebutkan (boleh umum, tidak perlu nama lengkap).'},
+    {id:'q10', text:'Apakah Anda pernah bekerja atau magang di lingkungan pendidikan atau HR sebelumnya? Ceritakan singkat.'},
+    {id:'q11', text:'Organisasi/komunitas apa yang pernah/sedang Anda ikuti yang berhubungan dengan pendidikan, SDM, atau bisnis?'},
+  ]},
+  { title:'Studi Kasus Situasional', questions:[
+    {id:'q12', text:'Seorang calon klien (perusahaan) tertarik tapi bilang "budget kami terbatas tahun ini". Apa langkah Anda selanjutnya?'},
+    {id:'q13', text:'Anda sudah follow-up 3 kali ke sebuah kampus tapi tidak ada respons. Apa yang akan Anda lakukan?'},
+    {id:'q14', text:'Jika target bulanan Anda belum tercapai di minggu ke-3, apa strategi Anda untuk mengejar di minggu terakhir?'},
+  ]},
+  { title:'Motivasi & Kesiapan Kerja', questions:[
+    {id:'q15', text:'Sistem kerja posisi ini menggunakan masa training (JOT) di awal sebelum menjadi mitra tetap dengan skema gaji berdasarkan kehadiran dan capaian. Apakah Anda siap dengan skema ini? Jelaskan alasannya.'},
+    {id:'q16', text:'Apa yang membuat Anda tertarik bekerja di bidang penjualan jasa psikologi/pendidikan, bukan bidang lain?'},
+    {id:'q17', text:'Berapa lama Anda berkomitmen jika diterima, dan apa target pribadi Anda dalam 3 bulan pertama?'},
+  ]},
+  { title:'Khusus Business Development Officer', onlyFor:'bdo', questions:[
+    {id:'q18', text:'Jika Anda harus membangun kerja sama jangka panjang (bukan sekali transaksi) dengan sebuah kampus untuk program tahunan, apa langkah-langkah yang Anda susun dari awal kontak sampai kontrak berjalan?'},
+    {id:'q19', text:'Bagaimana cara Anda mengevaluasi apakah sebuah calon mitra institusi "layak diprioritaskan" dibanding yang lain?'},
+  ]},
+];
+
+/* ==============================
+   STATE
+   ============================== */
+let progress = {
+  id_x: null,
+  step: 'intro',
+  biodata: { nama:'', hp:'', email:'', posisi:[], pendidikan:'', domisili:'' },
+  foto: null,
+  jawaban: {},
+  soalIndex: 0,
+  pelanggaran: { count:0, log:[] },
+  waktu: { mulai:null, selesai:null },
+};
+let stream = null;
+let fotoBlob = null;
+let soalAktif = false;      // true selama halaman soal terbuka -> anti-cheat aktif
+let syncTimer = null;
+let pendingSync = false;
+
+/* ==============================
+   UTIL
+   ============================== */
+function gl(txt){ document.getElementById('gLoaderTxt').textContent = txt||'Memuat...'; document.getElementById('gLoader').classList.add('on'); }
+function gh(){ document.getElementById('gLoader').classList.remove('on'); }
+function showPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+  window.scrollTo(0,0);
+}
+function setProgFill(pct){ document.getElementById('progFill').style.width = pct+'%'; }
+function nowIso(){ return new Date().toISOString(); }
+
+/* Cegah paste di semua input/textarea */
+function noPaste(el){
+  el.addEventListener('paste', e=>{ e.preventDefault(); return false; });
+  el.addEventListener('drop', e=>{ e.preventDefault(); return false; });
+  el.addEventListener('contextmenu', e=>{ e.preventDefault(); return false; });
+}
+
+/* ==============================
+   LOCALSTORAGE: SIMPAN & MUAT PROGRES
+   ============================== */
+function simpanLokal(){
+  try { localStorage.setItem(LS_KEY, JSON.stringify(progress)); } catch(e){ console.warn('localStorage gagal:', e); }
+  tandaiPending();
+}
+function muatLokal(){
+  try {
+    const raw = localStorage.getItem(LS_KEY);
+    if(!raw) return null;
+    return JSON.parse(raw);
+  } catch(e){ return null; }
+}
+function hapusLokal(){
+  try { localStorage.removeItem(LS_KEY); } catch(e){}
+}
+
+/* ==============================
+   INDIKATOR SIMPAN
+   ============================== */
+function tandaiPending(){
+  pendingSync = true;
+  const dot = document.getElementById('saveDot');
+  const txt = document.getElementById('saveText');
+  const ind = document.getElementById('saveInd');
+  ind.style.display = 'flex';
+  dot.className = 'save-dot pending';
+  txt.textContent = 'Menyimpan...';
+}
+function tandaiTersimpan(){
+  pendingSync = false;
+  const dot = document.getElementById('saveDot');
+  const txt = document.getElementById('saveText');
+  dot.className = 'save-dot';
+  txt.textContent = 'Tersimpan otomatis';
+}
+function tandaiOffline(){
+  const dot = document.getElementById('saveDot');
+  const txt = document.getElementById('saveText');
+  dot.className = 'save-dot offline';
+  txt.textContent = 'Belum tersinkron (akan dicoba lagi)';
+}
+
+/* ==============================
+   SINKRONISASI KE SERVER (debounced, dengan retry)
+   ============================== */
+function buildPayload(){
+  return {
+    x_01: progress.biodata.nama,
+    x_02: progress.biodata.hp,
+    x_03: progress.biodata.email,
+    x_04: (progress.biodata.posisi||[]).map(p=> p==='bdo' ? 'Business Development Officer' : 'Sales & Marketing Executive').join(', '),
+    x_05: progress.foto || '',
+    x_06: JSON.stringify(progress.jawaban),
+    x_07: JSON.stringify(progress.pelanggaran),
+    x_08: JSON.stringify({ pendidikan:progress.biodata.pendidikan, domisili:progress.biodata.domisili }),
+    x_09: progress.step === 'done' ? 'selesai' : 'in_progress',
+    x_10: JSON.stringify(progress.waktu),
+  };
+}
+
+function jadwalkanSync(delay){
+  clearTimeout(syncTimer);
+  syncTimer = setTimeout(sinkronKeServer, delay||900);
+}
+
+async function sinkronKeServer(){
+  // Belum punya biodata nama -> belum perlu sync (belum ada baris)
+  if(!progress.biodata.nama){ return; }
+  const payload = buildPayload();
+  try {
+    if(!progress.id_x){
+      const res = await fetch(`${API}?table=${TBL}`,{
+        method:'POST', headers:{'Content-Type':'application/json','X-Custom-Auth':KEY}, body:JSON.stringify(payload)
+      }).then(r=>r.json());
+      if(res.success){
+        progress.id_x = res.id_x;
+        simpanLokal();
+        tandaiTersimpan();
+      } else { tandaiOffline(); }
+    } else {
+      const res = await fetch(`${API}?table=${TBL}&id_x=${progress.id_x}`,{
+        method:'PUT', headers:{'Content-Type':'application/json','X-Custom-Auth':KEY}, body:JSON.stringify(payload)
+      }).then(r=>r.json());
+      if(res.success){ tandaiTersimpan(); } else { tandaiOffline(); }
+    }
+  } catch(e){
+    console.warn('Sync gagal (kemungkinan jaringan buruk):', e);
+    tandaiOffline();
+  }
+}
+
+/* Coba sync ulang otomatis tiap 15 detik jika ada yang pending/offline */
+setInterval(()=>{ if(pendingSync || document.getElementById('saveDot').classList.contains('offline')) sinkronKeServer(); }, 15000);
+/* Coba sync saat koneksi kembali online */
+window.addEventListener('online', sinkronKeServer);
+
+/* ==============================
+   INIT / RESUME
+   ============================== */
+window.onload = function(){
+  const saved = muatLokal();
+  if(saved && saved.step && saved.step !== 'intro' && saved.step !== 'done'){
+    progress = saved;
+    const nm = progress.biodata.nama || '(belum diisi nama)';
+    document.getElementById('resumeInfo').textContent = `Kami menemukan progres pengisian sebelumnya atas nama "${nm}", terakhir sampai tahap "${labelStep(progress.step)}". Lanjutkan dari sana?`;
+    document.getElementById('ovResume').classList.add('open');
+  }
+  document.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea').forEach(noPaste);
+};
+
+function labelStep(s){
+  return { biodata:'Data Diri', foto:'Foto', soal:'Pengisian Soal' }[s] || s;
+}
+
+function lanjutkanProgress(){
+  document.getElementById('ovResume').classList.remove('open');
+  // isi ulang field biodata
+  document.getElementById('b_nama').value = progress.biodata.nama||'';
+  document.getElementById('b_hp').value = progress.biodata.hp||'';
+  document.getElementById('b_email').value = progress.biodata.email||'';
+  document.querySelectorAll('.b_posisi_chk').forEach(c=>{ c.checked = (progress.biodata.posisi||[]).includes(c.value); });
+  document.getElementById('b_pendidikan').value = progress.biodata.pendidikan||'';
+  document.getElementById('b_domisili').value = progress.biodata.domisili||'';
+
+  if(progress.step === 'soal'){
+    bangunDaftarSoal();
+    renderSoalStep();
+    showPage('pgSoal'); mulaiAntiCheat();
+  } else if(progress.step === 'foto'){
+    showPage('pgFoto'); setProgFill(60); bukaKamera();
+  } else {
+    showPage('pgBiodata'); setProgFill(30);
+  }
+  document.getElementById('saveInd').style.display='flex';
+}
+
+function mulaiBaruProgress(){
+  document.getElementById('ovResume').classList.remove('open');
+  hapusLokal();
+  progress = { id_x:null, step:'intro', biodata:{nama:'',hp:'',email:'',posisi:[],pendidikan:'',domisili:''}, foto:null, jawaban:{}, soalIndex:0, pelanggaran:{count:0,log:[]}, waktu:{mulai:null,selesai:null} };
+}
+
+/* ==============================
+   STEP 1: INTRO -> BIODATA
+   ============================== */
+function mulaiForm(){
+  if(!progress.waktu.mulai) progress.waktu.mulai = nowIso();
+  progress.step = 'biodata';
+  simpanLokal();
+  showPage('pgBiodata');
+  setProgFill(30);
+  document.getElementById('saveInd').style.display='flex';
+}
+
+function validasiField(id, ok){
+  const fg = document.getElementById('fg_'+id);
+  fg.classList.toggle('err', !ok);
+  return ok;
+}
+
+function simpanBiodata(){
+  const nama = document.getElementById('b_nama').value.trim();
+  const hp = document.getElementById('b_hp').value.trim();
+  const email = document.getElementById('b_email').value.trim();
+  const posisi = Array.from(document.querySelectorAll('.b_posisi_chk:checked')).map(c=>c.value);
+  const pendidikan = document.getElementById('b_pendidikan').value.trim();
+  const domisili = document.getElementById('b_domisili').value.trim();
+
+  let ok = true;
+  ok = validasiField('nama', nama.length>=3) && ok;
+  ok = validasiField('hp', hp.length>=9) && ok;
+  ok = validasiField('email', /\S+@\S+\.\S+/.test(email)) && ok;
+  ok = validasiField('posisi', posisi.length>0) && ok;
+  ok = validasiField('pendidikan', pendidikan.length>=2) && ok;
+  ok = validasiField('domisili', domisili.length>=2) && ok;
+  if(!ok) return;
+
+  progress.biodata = { nama, hp, email, posisi, pendidikan, domisili };
+  progress.step = 'foto';
+  simpanLokal();
+  jadwalkanSync(200);
+
+  showPage('pgFoto');
+  setProgFill(60);
+  bukaKamera();
+}
+
+/* ==============================
+   STEP 2: FOTO
+   ============================== */
+function bukaKamera(){
+  document.getElementById('video').style.display='block';
+  const existingImg = document.querySelector('#camFrame img');
+  if(existingImg) existingImg.remove();
+  document.getElementById('btnAmbilFoto').style.display='block';
+  document.getElementById('btnUlangFoto').style.display='none';
+  document.getElementById('btnLanjutSoal').style.display='none';
+  document.getElementById('camTip').textContent = 'Posisikan wajah Anda di tengah frame, lalu tekan tombol di bawah untuk mengambil foto.';
+
+  navigator.mediaDevices.getUserMedia({ video:{ facingMode:{ ideal:'user' } } })
+    .then(s=>{ stream=s; document.getElementById('video').srcObject=s; })
+    .catch(()=>{ alert('Gagal mengakses kamera. Pastikan izin kamera diaktifkan lalu muat ulang halaman.'); });
+}
+
+function ambilFoto(){
+  const vid=document.getElementById('video'), cvs=document.getElementById('canvas');
+  const vw=vid.videoWidth||480, vh=vid.videoHeight||640;
+  cvs.width=vw; cvs.height=vh;
+  const ctx=cvs.getContext('2d');
+  ctx.translate(vw,0); ctx.scale(-1,1);
+  ctx.drawImage(vid,0,0,vw,vh);
+  cvs.toBlob(b=>{
+    fotoBlob=b;
+    const url=URL.createObjectURL(b);
+    const img=document.createElement('img');
+    img.src=url;
+    document.getElementById('camFrame').appendChild(img);
+    document.getElementById('video').style.display='none';
+    if(stream){ stream.getTracks().forEach(t=>t.stop()); }
+    document.getElementById('btnAmbilFoto').style.display='none';
+    document.getElementById('btnUlangFoto').style.display='block';
+    document.getElementById('btnLanjutSoal').style.display='block';
+    document.getElementById('camTip').textContent = 'Foto berhasil diambil. Jika kurang jelas, tekan "Ambil Ulang".';
+  }, 'image/jpeg', 0.85);
+}
+
+function ulangFoto(){ fotoBlob=null; bukaKamera(); }
+
+async function lanjutKeSoal(){
+  if(!fotoBlob && !progress.foto){ alert('Silakan ambil foto terlebih dahulu.'); return; }
+  if(fotoBlob){
+    gl('Mengunggah foto...');
+    try {
+      const namaSlug = (progress.biodata.nama||'peserta').toLowerCase().replace(/[^a-z0-9]+/g,'_');
+      const fn = `rekrutmen/${namaSlug}_${Date.now()}.jpg`;
+      const fd = new FormData(); fd.append('file', fotoBlob); fd.append('customName', fn);
+      const r2 = await fetch(R2,{method:'POST',headers:{'X-Custom-Auth':KEY},body:fd}).then(r=>r.json());
+      gh();
+      if(!r2.success){ alert('Gagal mengunggah foto, silakan coba lagi.'); return; }
+      progress.foto = fn;
+    } catch(e){ gh(); alert('Gagal mengunggah foto (periksa koneksi Anda), silakan coba lagi.'); return; }
+  }
+  progress.step = 'soal';
+  simpanLokal();
+  jadwalkanSync(200);
+
+  bangunDaftarSoal();
+  renderSoalStep();
+  showPage('pgSoal');
+  setProgFill(65);
+  mulaiAntiCheat();
+}
+
+/* ==============================
+   STEP 3: SOAL (satu pertanyaan per layar)
+   ============================== */
+let flatQuestions = [];   // daftar soal terurut sesuai posisi yang dipilih
+
+function bangunDaftarSoal(){
+  flatQuestions = [];
+  let secNo = 0;
+  SOAL_SECTIONS.forEach(sec=>{
+    if(sec.onlyFor && !(progress.biodata.posisi||[]).includes(sec.onlyFor)) return;
+    secNo++;
+    sec.questions.forEach((q, i)=>{
+      flatQuestions.push({ id:q.id, text:q.text, secTitle:sec.title, secNo, qNoInSec:i+1, totalInSec:sec.questions.length });
+    });
+  });
+  if(!progress.soalIndex || progress.soalIndex >= flatQuestions.length) progress.soalIndex = 0;
+}
+
+function renderSoalStep(){
+  const idx = progress.soalIndex;
+  const total = flatQuestions.length;
+  const q = flatQuestions[idx];
+  if(!q) return;
+
+  document.getElementById('qSecTitle').textContent = `${q.secNo}. ${q.secTitle}`;
+  document.getElementById('qCounter').textContent = `Soal ${idx+1} dari ${total}`;
+  document.getElementById('qProgFill').style.width = `${Math.round(((idx+1)/total)*100)}%`;
+  document.getElementById('qLabel').textContent = q.text;
+
+  const ta = document.getElementById('taCurrent');
+  ta.value = progress.jawaban[q.id] || '';
+  document.getElementById('fg_current').classList.remove('err');
+
+  document.getElementById('btnBack').style.visibility = idx===0 ? 'hidden' : 'visible';
+  document.getElementById('btnNext').textContent = (idx === total-1) ? '✅ Kirim Jawaban' : 'Lanjut →';
+
+  setProgFill(65 + Math.round(((idx+1)/total)*30));
+
+  ta.oninput = ()=>{
+    progress.jawaban[q.id] = ta.value;
+    simpanLokal();
+    jadwalkanSync(1200);
+  };
+  ta.focus();
+}
+
+function jawabanValidUntuk(qid){
+  return (progress.jawaban[qid]||'').trim().length >= 5;
+}
+
+function soalBack(){
+  if(progress.soalIndex === 0) return;
+  progress.soalIndex -= 1;
+  simpanLokal();
+  renderSoalStep();
+}
+
+function soalNext(){
+  const q = flatQuestions[progress.soalIndex];
+  const ta = document.getElementById('taCurrent');
+  progress.jawaban[q.id] = ta.value;
+
+  if(!jawabanValidUntuk(q.id)){
+    document.getElementById('fg_current').classList.add('err');
+    return;
+  }
+  simpanLokal();
+  jadwalkanSync(300);
+
+  if(progress.soalIndex === flatQuestions.length - 1){
+    kirimJawaban();
+    return;
+  }
+  progress.soalIndex += 1;
+  simpanLokal();
+  renderSoalStep();
+}
+
+async function kirimJawaban(){
+  const belumLengkap = flatQuestions.find(q=>!jawabanValidUntuk(q.id));
+  if(belumLengkap){
+    const idx = flatQuestions.indexOf(belumLengkap);
+    progress.soalIndex = idx;
+    renderSoalStep();
+    document.getElementById('fg_current').classList.add('err');
+    alert('Masih ada pertanyaan yang belum diisi dengan lengkap.');
+    return;
+  }
+  soalAktif = false;
+  progress.step = 'done';
+  progress.waktu.selesai = nowIso();
+  simpanLokal();
+
+  gl('Mengirim jawaban...');
+  await sinkronKeServer();
+  gh();
+
+  hapusLokal();
+  showPage('pgDone');
+  setProgFill(100);
+  document.getElementById('saveInd').style.display='none';
+}
+
+/* ==============================
+   ANTI-CHEAT: DETEKSI PINDAH TAB / MINIMIZE
+   ============================== */
+function mulaiAntiCheat(){
+  soalAktif = true;
+}
+
+function catatPelanggaran(){
+  if(!soalAktif) return;
+  progress.pelanggaran.count += 1;
+  progress.pelanggaran.log.push(nowIso());
+  if(progress.pelanggaran.log.length > 30) progress.pelanggaran.log = progress.pelanggaran.log.slice(-30);
+  simpanLokal();
+  jadwalkanSync(500);
+
+  const badge = document.getElementById('violBadge');
+  document.getElementById('violText').textContent = `Pelanggaran tercatat: ${progress.pelanggaran.count} kali (meninggalkan halaman saat mengisi soal)`;
+  badge.classList.add('show');
+
+  document.getElementById('warnText').textContent = `Sistem mendeteksi Anda berpindah tab/aplikasi lain saat mengerjakan soal. Kejadian ini tercatat (total: ${progress.pelanggaran.count} kali) dan menjadi bagian dari penilaian.`;
+  document.getElementById('ovWarn').classList.add('open');
+}
+
+function tutupWarn(){ document.getElementById('ovWarn').classList.remove('open'); }
+
+document.addEventListener('visibilitychange', ()=>{ if(document.hidden) catatPelanggaran(); });
+window.addEventListener('blur', catatPelanggaran);
+</script>
+</body>
+</html>
