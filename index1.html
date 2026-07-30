@@ -177,20 +177,6 @@ body{background:var(--bg);color:var(--dark);}
       <input type="email" id="b_email" placeholder="nama@email.com">
       <div class="fg-errmsg">Email wajib diisi dengan format benar</div>
     </div>
-    <div class="fg" id="fg_usia">
-      <label>Usia</label>
-      <input type="text" inputmode="numeric" id="b_usia" placeholder="Contoh: 25">
-      <div class="fg-errmsg">Usia wajib diisi dengan angka yang valid</div>
-    </div>
-    <div class="fg" id="fg_gender">
-      <label>Jenis Kelamin</label>
-      <select id="b_gender">
-        <option value="">-- Pilih Jenis Kelamin --</option>
-        <option value="L">Laki-laki</option>
-        <option value="P">Perempuan</option>
-      </select>
-      <div class="fg-errmsg">Jenis kelamin wajib dipilih</div>
-    </div>
     <div class="fg" id="fg_posisi">
       <label>Posisi yang Dilamar</label>
       <div class="hint" style="margin-top:0;margin-bottom:8px;">Boleh dipilih lebih dari satu jika Anda melamar untuk keduanya.</div>
@@ -216,8 +202,6 @@ body{background:var(--bg);color:var(--dark);}
   <div class="page" id="pgFoto">
     <h2 style="font-size:18px;font-weight:900;margin-bottom:4px;">Ambil Foto Diri</h2>
     <p style="font-size:12.5px;color:var(--muted);margin-bottom:18px;">Pastikan wajah terlihat jelas dan pencahayaan cukup.</p>
-
-    <button class="btn btn-outline" style="margin-bottom:14px;" onclick="kembaliKeBiodata()">← Kembali ke Data Diri</button>
 
     <div class="cam-frame" id="camFrame">
       <video id="video" autoplay playsinline></video>
@@ -261,13 +245,6 @@ body{background:var(--bg);color:var(--dark);}
       <h2>Terima Kasih!</h2>
       <p>Jawaban Anda telah berhasil terkirim ke tim Lidan Psikologi. Kami akan menghubungi Anda melalui WhatsApp/email apabila lolos ke tahap selanjutnya.</p>
     </div>
-
-    <div class="notice" style="text-align:left;">
-      <b>🔑 Lanjut ke tes berikutnya</b>
-      Kode token Anda adalah: <b id="tokenValue">-</b>. Silahkan dicopy terlebih dahulu sebelum melanjutkan.
-    </div>
-    <button class="btn btn-outline" id="btnCopyToken" onclick="copyToken()">📋 Salin Kode Token</button>
-    <button class="btn btn-primary" id="btnLanjutTes" style="margin-top:10px;" onclick="lanjutTesBerikutnya()">Lanjut ke Tes Berikutnya →</button>
   </div>
 
 </div>
@@ -276,7 +253,17 @@ body{background:var(--bg);color:var(--dark);}
 <div class="save-ind" id="saveInd" style="display:none;">
   <div class="save-dot" id="saveDot"></div>
   <span id="saveText">Tersimpan otomatis</span>
-  <span id="btnResetProgress" style="margin-left:auto;color:var(--red);font-weight:800;cursor:pointer;text-decoration:underline;" onclick="resetProgress()">Mulai Ulang</span>
+</div>
+
+<!-- RESUME PROMPT -->
+<div class="overlay" id="ovResume">
+  <div class="modal-box">
+    <div class="ic">🔄</div>
+    <h3>Lanjutkan Pengisian?</h3>
+    <p id="resumeInfo">Kami menemukan progres pengisian sebelumnya di perangkat ini. Ingin melanjutkan dari titik terakhir, atau mulai baru?</p>
+    <button class="btn btn-primary" onclick="lanjutkanProgress()">Lanjutkan Pengisian</button>
+    <button class="btn btn-outline" style="margin-top:10px;" onclick="mulaiBaruProgress()">Mulai Baru</button>
+  </div>
 </div>
 
 <!-- WARNING MODAL: PINDAH TAB -->
@@ -298,7 +285,6 @@ const R2  = 'https://lidan.co.id/api/upload_r2_lidan';
 const CDN = 'https://assets.lidan.co.id/';
 const KEY = 'admin';
 const TBL = 'rekrutmen';
-const TBL_NILAI = 'nilai1_json';
 const LS_KEY = 'rekrutmen_progress_v1';
 
 /* Daftar pertanyaan, dikelompokkan per bagian.
@@ -343,7 +329,7 @@ const SOAL_SECTIONS = [
 let progress = {
   id_x: null,
   step: 'intro',
-  biodata: { nama:'', hp:'', email:'', usia:'', gender:'', posisi:[], pendidikan:'', domisili:'' },
+  biodata: { nama:'', hp:'', email:'', posisi:[], pendidikan:'', domisili:'' },
   foto: null,
   jawaban: {},
   soalIndex: 0,
@@ -352,7 +338,6 @@ let progress = {
 };
 let stream = null;
 let fotoBlob = null;
-let tokenAktif = null;
 let soalAktif = false;      // true selama halaman soal terbuka -> anti-cheat aktif
 let syncTimer = null;
 let pendingSync = false;
@@ -463,7 +448,7 @@ function buildPayload(){
     x_05: progress.foto || '',
     x_06: JSON.stringify(progress.jawaban),
     x_07: JSON.stringify(progress.pelanggaran),
-    x_08: JSON.stringify({ pendidikan:progress.biodata.pendidikan, domisili:progress.biodata.domisili, usia:progress.biodata.usia, gender:progress.biodata.gender }),
+    x_08: JSON.stringify({ pendidikan:progress.biodata.pendidikan, domisili:progress.biodata.domisili }),
     x_09: progress.step === 'done' ? 'selesai' : 'in_progress',
     x_10: JSON.stringify(progress.waktu),
   };
@@ -506,67 +491,53 @@ setInterval(()=>{ if(pendingSync || document.getElementById('saveDot').classList
 window.addEventListener('online', sinkronKeServer);
 
 /* ==============================
-   INIT / AUTO-RESTORE DARI LOCALSTORAGE
+   INIT / RESUME
    ============================== */
 window.onload = function(){
   const saved = muatLokal();
-  if(saved && saved.step && saved.step !== 'intro'){
+  if(saved && saved.step && saved.step !== 'intro' && saved.step !== 'done'){
     progress = saved;
-    isiUlangFieldBiodata();
-    updateHeaderPosisi(progress.biodata.posisi||[]);
-
-    if(progress.step === 'done'){
-      tokenAktif = progress.token || null;
-      showPage('pgDone');
-      setProgFill(100);
-      document.getElementById('tokenValue').textContent = progress.token || '-';
-      document.getElementById('saveInd').style.display='none';
-    } else if(progress.step === 'soal'){
-      bangunDaftarSoal();
-      renderSoalStep();
-      showPage('pgSoal');
-      mulaiAntiCheat();
-      document.getElementById('saveInd').style.display='flex';
-    } else if(progress.step === 'foto'){
-      showPage('pgFoto');
-      setProgFill(60);
-      tampilkanStepFoto();
-      document.getElementById('saveInd').style.display='flex';
-    } else {
-      showPage('pgBiodata');
-      setProgFill(30);
-      document.getElementById('saveInd').style.display='flex';
-    }
+    const nm = progress.biodata.nama || '(belum diisi nama)';
+    document.getElementById('resumeInfo').textContent = `Kami menemukan progres pengisian sebelumnya atas nama "${nm}", terakhir sampai tahap "${labelStep(progress.step)}". Lanjutkan dari sana?`;
+    document.getElementById('ovResume').classList.add('open');
   }
   document.querySelectorAll('input[type=text],input[type=email],input[type=tel],textarea').forEach(noPaste);
   pasangListenerPosisi();
 };
 
-function isiUlangFieldBiodata(){
+function labelStep(s){
+  return { biodata:'Data Diri', foto:'Foto', soal:'Pengisian Soal' }[s] || s;
+}
+
+function lanjutkanProgress(){
+  document.getElementById('ovResume').classList.remove('open');
+  // isi ulang field biodata
   document.getElementById('b_nama').value = progress.biodata.nama||'';
   document.getElementById('b_hp').value = progress.biodata.hp||'';
   document.getElementById('b_email').value = progress.biodata.email||'';
-  document.getElementById('b_usia').value = progress.biodata.usia||'';
-  document.getElementById('b_gender').value = progress.biodata.gender||'';
   document.querySelectorAll('.b_posisi_chk').forEach(c=>{ c.checked = (progress.biodata.posisi||[]).includes(c.value); });
   document.getElementById('b_pendidikan').value = progress.biodata.pendidikan||'';
   document.getElementById('b_domisili').value = progress.biodata.domisili||'';
+  updateHeaderPosisi(progress.biodata.posisi||[]);
+
+  if(progress.step === 'soal'){
+    bangunDaftarSoal();
+    renderSoalStep();
+    showPage('pgSoal'); mulaiAntiCheat();
+  } else if(progress.step === 'foto'){
+    showPage('pgFoto'); setProgFill(60); bukaKamera();
+  } else {
+    showPage('pgBiodata'); setProgFill(30);
+  }
+  document.getElementById('saveInd').style.display='flex';
 }
 
-/* Reset total, dipicu manual lewat tautan "Mulai Ulang" (bukan otomatis saat refresh) */
-function resetProgress(){
-  if(!confirm('Yakin ingin memulai ulang dari awal? Semua data yang sudah diisi di perangkat ini akan dihapus.')) return;
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  fotoBlob = null;
-  soalAktif = false;
+function mulaiBaruProgress(){
+  document.getElementById('ovResume').classList.remove('open');
   hapusLokal();
-  progress = { id_x:null, step:'intro', biodata:{nama:'',hp:'',email:'',usia:'',gender:'',posisi:[],pendidikan:'',domisili:''}, foto:null, jawaban:{}, soalIndex:0, pelanggaran:{count:0,log:[]}, waktu:{mulai:null,selesai:null} };
+  progress = { id_x:null, step:'intro', biodata:{nama:'',hp:'',email:'',posisi:[],pendidikan:'',domisili:''}, foto:null, jawaban:{}, soalIndex:0, pelanggaran:{count:0,log:[]}, waktu:{mulai:null,selesai:null} };
   document.querySelectorAll('.b_posisi_chk').forEach(c=>{ c.checked = false; });
-  isiUlangFieldBiodata();
   updateHeaderPosisi([]);
-  showPage('pgIntro');
-  setProgFill(5);
-  document.getElementById('saveInd').style.display='none';
 }
 
 /* ==============================
@@ -591,8 +562,6 @@ function simpanBiodata(){
   const nama = document.getElementById('b_nama').value.trim();
   const hp = document.getElementById('b_hp').value.trim();
   const email = document.getElementById('b_email').value.trim();
-  const usia = document.getElementById('b_usia').value.trim();
-  const gender = document.getElementById('b_gender').value;
   const posisi = Array.from(document.querySelectorAll('.b_posisi_chk:checked')).map(c=>c.value);
   const pendidikan = document.getElementById('b_pendidikan').value.trim();
   const domisili = document.getElementById('b_domisili').value.trim();
@@ -601,14 +570,12 @@ function simpanBiodata(){
   ok = validasiField('nama', nama.length>=3) && ok;
   ok = validasiField('hp', hp.length>=9) && ok;
   ok = validasiField('email', /\S+@\S+\.\S+/.test(email)) && ok;
-  ok = validasiField('usia', /^[0-9]{1,2}$/.test(usia) && +usia>=15 && +usia<=70) && ok;
-  ok = validasiField('gender', gender!=='') && ok;
   ok = validasiField('posisi', posisi.length>0) && ok;
   ok = validasiField('pendidikan', pendidikan.length>=2) && ok;
   ok = validasiField('domisili', domisili.length>=2) && ok;
   if(!ok) return;
 
-  progress.biodata = { nama, hp, email, usia, gender, posisi, pendidikan, domisili };
+  progress.biodata = { nama, hp, email, posisi, pendidikan, domisili };
   updateHeaderPosisi(posisi);
   progress.step = 'foto';
   simpanLokal();
@@ -619,36 +586,9 @@ function simpanBiodata(){
   bukaKamera();
 }
 
-function kembaliKeBiodata(){
-  if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-  progress.step = 'biodata';
-  simpanLokal();
-  showPage('pgBiodata');
-  setProgFill(30);
-}
-
 /* ==============================
    STEP 2: FOTO
    ============================== */
-function tampilkanStepFoto(){
-  if(progress.foto){
-    const frame = document.getElementById('camFrame');
-    const existingImg = frame.querySelector('img');
-    if(existingImg) existingImg.remove();
-    if(stream){ stream.getTracks().forEach(t=>t.stop()); stream=null; }
-    document.getElementById('video').style.display='none';
-    const img = document.createElement('img');
-    img.src = CDN + progress.foto;
-    frame.appendChild(img);
-    document.getElementById('btnAmbilFoto').style.display='none';
-    document.getElementById('btnUlangFoto').style.display='block';
-    document.getElementById('btnLanjutSoal').style.display='block';
-    document.getElementById('camTip').textContent = 'Foto sebelumnya sudah tersimpan. Tekan "Lanjut ke Soal", atau ambil ulang bila perlu.';
-  } else {
-    bukaKamera();
-  }
-}
-
 function bukaKamera(){
   document.getElementById('video').style.display='block';
   const existingImg = document.querySelector('#camFrame img');
@@ -745,7 +685,7 @@ function renderSoalStep(){
   ta.value = progress.jawaban[q.id] || '';
   document.getElementById('fg_current').classList.remove('err');
 
-  document.getElementById('btnBack').style.visibility = 'visible';
+  document.getElementById('btnBack').style.visibility = idx===0 ? 'hidden' : 'visible';
   document.getElementById('btnNext').textContent = (idx === total-1) ? '✅ Kirim Jawaban' : 'Lanjut →';
 
   setProgFill(65 + Math.round(((idx+1)/total)*30));
@@ -763,19 +703,10 @@ function jawabanValidUntuk(qid){
 }
 
 function soalBack(){
-  if(progress.soalIndex === 0){ kembaliKeFoto(); return; }
+  if(progress.soalIndex === 0) return;
   progress.soalIndex -= 1;
   simpanLokal();
   renderSoalStep();
-}
-
-function kembaliKeFoto(){
-  soalAktif = false;
-  progress.step = 'foto';
-  simpanLokal();
-  showPage('pgFoto');
-  setProgFill(60);
-  tampilkanStepFoto();
 }
 
 function soalNext(){
@@ -814,119 +745,14 @@ async function kirimJawaban(){
   progress.waktu.selesai = nowIso();
   simpanLokal();
 
-  if(!progress.id_x){
-    /* Belum pernah tersinkron sama sekali ke server (mis. offline sejak awal) ->
-       wajib tunggu supaya id_x tersedia untuk membentuk token. Kasus ini jarang terjadi. */
-    gl('Mengirim jawaban...');
-    await sinkronKeServer();
-    gh();
-  } else {
-    /* id_x sudah ada -> update jawaban akhir dikirim di latar belakang,
-       tidak perlu menunggu supaya tombol langsung merespon. */
-    sinkronKeServer();
-  }
+  gl('Mengirim jawaban...');
+  await sinkronKeServer();
+  gh();
 
-  const token = buatTokenAkses();
-  tokenAktif = token;
-  progress.token = token;
-  simpanLokal();
-
+  hapusLokal();
   showPage('pgDone');
   setProgFill(100);
-  document.getElementById('tokenValue').textContent = token;
   document.getElementById('saveInd').style.display='none';
-}
-
-/* ==============================
-   TOKEN AKSES TES BERIKUTNYA
-   ============================== */
-function buatTokenAkses(){
-  const letters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ';
-  let rand = '';
-  for(let i=0;i<2;i++){ rand += letters.charAt(Math.floor(Math.random()*letters.length)); }
-  return rand + (progress.id_x || '');
-}
-
-function copyToken(){
-  const txt = document.getElementById('tokenValue').textContent;
-  const btn = document.getElementById('btnCopyToken');
-  const tandaiSukses = ()=>{
-    const orig = btn.textContent;
-    btn.textContent = '✓ Tersalin';
-    setTimeout(()=>{ btn.textContent = orig; }, 1500);
-  };
-  if(navigator.clipboard && navigator.clipboard.writeText){
-    navigator.clipboard.writeText(txt).then(tandaiSukses).catch(()=>{
-      copyFallback(txt); tandaiSukses();
-    });
-  } else {
-    copyFallback(txt); tandaiSukses();
-  }
-}
-
-function copyFallback(txt){
-  const ta = document.createElement('textarea');
-  ta.value = txt;
-  ta.style.position = 'fixed';
-  ta.style.opacity = '0';
-  document.body.appendChild(ta);
-  ta.select();
-  try { document.execCommand('copy'); } catch(e){}
-  document.body.removeChild(ta);
-}
-
-function buatBiodataJson(token){
-  const b = progress.biodata;
-  const fotoUrl = progress.foto ? (CDN + progress.foto) : '';
-  const tglTes = (progress.waktu.selesai || nowIso()).slice(0,10);
-  return {
-    bioNama: b.nama,
-    bioUsia: b.usia,
-    bioPend: b.pendidikan,
-    bioSekolah: '',
-    bioKota: b.domisili,
-    bioGender: b.gender,
-    bioTelp: b.hp,
-    nama: b.nama,
-    usia: b.usia,
-    pendidikan: b.pendidikan,
-    jenis_kelamin: b.gender,
-    telepon: b.hp,
-    kesediaan_dihubungi: 'tidak_berlaku',
-    tgl_tes: tglTes,
-    status: 'aktif',
-    foto_selfie: fotoUrl,
-  };
-}
-
-async function kirimDataTesBerikutnya(token){
-  const payload = { x_01: token, x_02: JSON.stringify(buatBiodataJson(token)) };
-  const res = await fetch(`${API}?table=${TBL_NILAI}`, {
-    method:'POST', headers:{'Content-Type':'application/json','X-Custom-Auth':KEY}, body:JSON.stringify(payload)
-  }).then(r=>r.json());
-  return !!(res && res.success);
-}
-
-async function lanjutTesBerikutnya(){
-  const btn = document.getElementById('btnLanjutTes');
-  if(btn) btn.disabled = true;
-  gl('Menyiapkan tes berikutnya...');
-  try {
-    const ok = await kirimDataTesBerikutnya(tokenAktif);
-    gh();
-    if(!ok){
-      if(btn) btn.disabled = false;
-      alert('Gagal menyimpan data untuk tes berikutnya. Silakan coba lagi.');
-      return;
-    }
-  } catch(e){
-    gh();
-    if(btn) btn.disabled = false;
-    alert('Gagal menyimpan data (periksa koneksi Anda). Silakan coba lagi.');
-    return;
-  }
-  hapusLokal();
-  window.location.href = 'https://rekrutmen.lidan.co.id/1';
 }
 
 /* ==============================
