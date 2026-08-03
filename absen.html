@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Absensi & Konfirmasi Data Interview - Lidan Psikologi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#5b5ef4; --p2:#7c3aed; --blue:#0ea5e9; --green:#10b981; --orange:#f59e0b; --red:#ef4444;
+  --dark:#0f172a; --muted:#64748b; --border:#e2e8f0; --bg:#f8fafc; --white:#fff;
+}
+*{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;margin:0;padding:0;-webkit-tap-highlight-color:transparent;}
+body{background:var(--bg);color:var(--dark);}
+.wrap{max-width:640px;margin:0 auto;min-height:100vh;background:var(--white);box-shadow:0 0 40px rgba(0,0,0,0.04);}
+
+.head{background:linear-gradient(135deg,#0f172a 0%,#312e81 60%,#5b5ef4 100%);color:#fff;padding:22px 20px;position:sticky;top:0;z-index:50;}
+.head-row{display:flex;align-items:center;gap:12px;}
+.head-icon{width:44px;height:44px;background:rgba(255,255,255,0.12);border-radius:12px;display:flex;align-items:center;justify-content:center;font-size:20px;flex-shrink:0;}
+.head h1{font-size:16px;font-weight:900;letter-spacing:-0.3px;}
+.head p{font-size:11px;color:rgba(255,255,255,0.6);margin-top:2px;}
+
+.page{padding:24px 20px 40px;}
+
+.intro-box{background:var(--bg);border:1px solid var(--border);border-radius:14px;padding:16px;margin-bottom:20px;font-size:12.5px;color:var(--muted);line-height:1.7;}
+.intro-box b{color:var(--dark);}
+
+.sec-block{margin-bottom:26px;}
+.sec-head{display:flex;align-items:center;gap:10px;margin-bottom:14px;padding-bottom:10px;border-bottom:2px solid var(--bg);}
+.sec-num{width:28px;height:28px;background:var(--primary);color:#fff;border-radius:8px;display:flex;align-items:center;justify-content:center;font-size:13px;font-weight:900;flex-shrink:0;}
+.sec-head h3{font-size:14.5px;font-weight:800;letter-spacing:-0.2px;}
+
+.fg{margin-bottom:16px;}
+.fg label{display:block;font-size:12px;font-weight:800;color:var(--dark);margin-bottom:6px;}
+.fg .hint{font-size:11px;color:var(--muted);font-weight:500;margin-top:4px;}
+.fg input[type=text],.fg input[type=tel],.fg input[type=number],.fg input[type=date],.fg select,.fg textarea{
+  width:100%;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:14px;outline:none;font-family:inherit;color:var(--dark);background:var(--white);transition:0.15s;
+}
+.fg input:focus,.fg select:focus,.fg textarea:focus{border-color:var(--primary);box-shadow:0 0 0 3px rgba(91,94,244,0.1);}
+.fg textarea{resize:vertical;min-height:70px;line-height:1.6;}
+.fg.err input,.fg.err textarea,.fg.err select{border-color:var(--red);}
+.fg-errmsg{font-size:11px;color:var(--red);font-weight:700;margin-top:5px;display:none;}
+.fg.err .fg-errmsg{display:block;}
+
+.chk-row{display:flex;align-items:center;gap:9px;padding:12px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13.5px;font-weight:600;margin-bottom:8px;cursor:pointer;transition:0.15s;}
+.chk-row:has(input:checked){border-color:var(--primary);background:rgba(91,94,244,0.06);}
+.chk-row input{width:17px;height:17px;accent-color:var(--primary);flex-shrink:0;}
+
+.radio-row{display:flex;gap:8px;}
+.radio-opt{flex:1;text-align:center;padding:11px 8px;border:1.5px solid var(--border);border-radius:10px;font-size:13px;font-weight:700;cursor:pointer;transition:0.15s;color:var(--muted);}
+.radio-opt input{display:none;}
+.radio-opt:has(input:checked){border-color:var(--primary);background:rgba(91,94,244,0.08);color:var(--primary);}
+
+.btn{width:100%;padding:14px;border:none;border-radius:11px;font-size:14.5px;font-weight:800;cursor:pointer;font-family:inherit;transition:0.15s;}
+.btn-primary{background:linear-gradient(135deg,#5b5ef4,#7c3aed);color:#fff;box-shadow:0 6px 16px rgba(91,94,244,0.3);}
+.btn-primary:disabled{opacity:0.5;cursor:not-allowed;}
+
+.done-wrap{text-align:center;padding-top:60px;padding-bottom:60px;}
+.done-icon{width:80px;height:80px;background:linear-gradient(135deg,#10b981,#059669);border-radius:50%;display:flex;align-items:center;justify-content:center;font-size:38px;margin:0 auto 20px;box-shadow:0 10px 30px rgba(16,185,129,0.3);}
+.done-wrap h2{font-size:19px;font-weight:900;margin-bottom:10px;}
+.done-wrap p{font-size:13.5px;color:var(--muted);line-height:1.7;padding:0 20px;}
+
+#pgDone{display:none;}
+#pgForm.hidden{display:none;}
+
+#gLoader{position:fixed;inset:0;background:rgba(255,255,255,0.85);z-index:9500;display:none;align-items:center;justify-content:center;flex-direction:column;gap:10px;}
+#gLoader.on{display:flex;}
+.spin{width:30px;height:30px;border:3px solid #e2e8f0;border-top-color:var(--primary);border-radius:50%;animation:rot 0.7s linear infinite;}
+@keyframes rot{to{transform:rotate(360deg);}}
+#gLoaderTxt{font-size:12.5px;font-weight:700;color:var(--muted);}
+</style>
+</head>
+<body>
+
+<div id="gLoader"><div class="spin"></div><div id="gLoaderTxt">Mengirim...</div></div>
+
+<div class="wrap">
+
+  <div class="head">
+    <div class="head-row">
+      <div class="head-icon">🧠</div>
+      <div>
+        <h1>Absensi & Konfirmasi Data</h1>
+        <p>Lidan Psikologi &middot; Sebelum Interview</p>
+      </div>
+    </div>
+  </div>
+
+  <div class="page" id="pgForm">
+    <div class="intro-box">
+      <b>Selamat datang!</b> Sebelum interview, mohon isi data berikut dengan jujur. Ini membantu proses interview Anda berjalan lebih singkat &amp; fokus.
+    </div>
+
+    <!-- ===== IDENTITAS ===== -->
+    <div class="sec-block">
+      <div class="sec-head"><div class="sec-num">1</div><h3>Identitas</h3></div>
+
+      <div class="fg" id="fg_nama">
+        <label>Nama Lengkap</label>
+        <input type="text" id="nama" placeholder="Sesuai KTP">
+        <div class="fg-errmsg">Nama wajib diisi</div>
+      </div>
+
+      <div class="fg" id="fg_hp">
+        <label>No. HP / WhatsApp Aktif</label>
+        <input type="tel" id="hp" placeholder="08xxxxxxxxxx">
+        <div class="fg-errmsg">No. HP wajib diisi</div>
+      </div>
+
+      <div class="fg" id="fg_posisi">
+        <label>Posisi yang Dilamar</label>
+        <select id="posisi">
+          <option value="">-- Pilih Posisi --</option>
+          <option value="sales">Sales & Marketing Executive</option>
+          <option value="bdo">Business Development Officer</option>
+        </select>
+        <div class="fg-errmsg">Posisi wajib dipilih</div>
+      </div>
+
+      <div class="fg" id="fg_status_kerja">
+        <label>Status Pekerjaan Saat Ini</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="status_kerja" value="masih_bekerja">Masih Bekerja</label>
+          <label class="radio-opt"><input type="radio" name="status_kerja" value="sudah_resign">Sudah Resign</label>
+          <label class="radio-opt"><input type="radio" name="status_kerja" value="belum_bekerja">Belum Bekerja</label>
+        </div>
+        <div class="fg-errmsg">Wajib dipilih salah satu</div>
+      </div>
+
+      <div class="fg" id="fg_alasan_resign" style="display:none;">
+        <label>Alasan Resign / Keluar dari Pekerjaan Sebelumnya</label>
+        <textarea id="alasan_resign" placeholder="Singkat saja"></textarea>
+      </div>
+    </div>
+
+    <!-- ===== KESIAPAN KERJA ===== -->
+    <div class="sec-block">
+      <div class="sec-head"><div class="sec-num">2</div><h3>Kesiapan & Ekspektasi</h3></div>
+
+      <div class="fg" id="fg_gaji_diminta">
+        <label>Gaji yang Diminta (Rp / bulan)</label>
+        <input type="number" id="gaji_diminta" placeholder="Contoh: 3500000">
+        <div class="fg-errmsg">Wajib diisi</div>
+      </div>
+
+      <div class="fg">
+        <label>Gaji Terakhir Diterima (Rp / bulan) <span style="font-weight:500;color:var(--muted);">- opsional</span></label>
+        <input type="number" id="gaji_terakhir" placeholder="Kosongkan jika belum pernah bekerja">
+      </div>
+
+      <div class="fg" id="fg_mulai_kerja">
+        <label>Kapan Bisa Mulai Bekerja?</label>
+        <select id="mulai_kerja">
+          <option value="">-- Pilih --</option>
+          <option value="langsung">Langsung / minggu ini</option>
+          <option value="2_minggu">Sekitar 2 minggu lagi</option>
+          <option value="1_bulan">Sekitar 1 bulan lagi</option>
+          <option value="lebih_1_bulan">Lebih dari 1 bulan</option>
+        </select>
+        <div class="fg-errmsg">Wajib dipilih</div>
+      </div>
+
+      <div class="fg" id="fg_dinas">
+        <label>Bersedia Dinas / Kerja Keluar Kota Jika Diperlukan?</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="dinas" value="ya">Ya</label>
+          <label class="radio-opt"><input type="radio" name="dinas" value="tidak">Tidak</label>
+        </div>
+        <div class="fg-errmsg">Wajib dipilih</div>
+      </div>
+    </div>
+
+    <!-- ===== KENDARAAN ===== -->
+    <div class="sec-block">
+      <div class="sec-head"><div class="sec-num">3</div><h3>Kendaraan & Mobilitas</h3></div>
+
+      <div class="fg">
+        <label>Kendaraan Pribadi yang Dimiliki</label>
+        <label class="chk-row"><input type="checkbox" class="kendaraan_chk" value="motor"> Motor</label>
+        <label class="chk-row"><input type="checkbox" class="kendaraan_chk" value="mobil"> Mobil</label>
+        <label class="chk-row"><input type="checkbox" class="kendaraan_chk" value="tidak_ada"> Tidak punya kendaraan pribadi</label>
+      </div>
+
+      <div class="fg">
+        <label>SIM yang Dimiliki</label>
+        <label class="chk-row"><input type="checkbox" class="sim_chk" value="sim_a"> SIM A</label>
+        <label class="chk-row"><input type="checkbox" class="sim_chk" value="sim_c"> SIM C</label>
+        <label class="chk-row"><input type="checkbox" class="sim_chk" value="tidak_ada"> Belum punya SIM</label>
+      </div>
+    </div>
+
+    <!-- ===== DOKUMEN & REFERENSI ===== -->
+    <div class="sec-block">
+      <div class="sec-head"><div class="sec-num">4</div><h3>Dokumen & Referensi</h3></div>
+
+      <div class="fg">
+        <label>Dokumen yang Sudah Siap Dibawa/Diupload</label>
+        <label class="chk-row"><input type="checkbox" class="dok_chk" value="ktp"> KTP</label>
+        <label class="chk-row"><input type="checkbox" class="dok_chk" value="ijazah"> Ijazah</label>
+        <label class="chk-row"><input type="checkbox" class="dok_chk" value="skck"> SKCK</label>
+        <label class="chk-row"><input type="checkbox" class="dok_chk" value="cv"> CV</label>
+        <label class="chk-row"><input type="checkbox" class="dok_chk" value="pas_foto"> Pas Foto</label>
+      </div>
+
+      <div class="fg">
+        <label>Nama Kontak Referensi <span style="font-weight:500;color:var(--muted);">- opsional</span></label>
+        <input type="text" id="ref_nama" placeholder="Nama orang yang bisa dihubungi untuk verifikasi">
+      </div>
+
+      <div class="fg">
+        <label>No. HP Kontak Referensi <span style="font-weight:500;color:var(--muted);">- opsional</span></label>
+        <input type="tel" id="ref_hp" placeholder="08xxxxxxxxxx">
+      </div>
+    </div>
+
+    <!-- ===== KONFIRMASI SKEMA KERJA ===== -->
+    <div class="sec-block">
+      <div class="sec-head"><div class="sec-num">5</div><h3>Konfirmasi Skema Kerja</h3></div>
+
+      <div class="fg" id="fg_jot">
+        <label>Sistem kerja posisi ini menggunakan masa training (JOT) di awal, dengan skema gaji berdasarkan kehadiran & capaian. Apakah Anda tetap bersedia dengan skema ini?</label>
+        <div class="radio-row">
+          <label class="radio-opt"><input type="radio" name="jot" value="ya">Ya, Bersedia</label>
+          <label class="radio-opt"><input type="radio" name="jot" value="tidak">Tidak Bersedia</label>
+        </div>
+        <div class="fg-errmsg">Wajib dipilih</div>
+      </div>
+
+      <div class="fg">
+        <label>Catatan Tambahan <span style="font-weight:500;color:var(--muted);">- opsional</span></label>
+        <textarea id="catatan" placeholder="Ada hal lain yang ingin disampaikan sebelum interview?"></textarea>
+      </div>
+    </div>
+
+    <button class="btn btn-primary" id="btnSubmit" onclick="kirimAbsensi()">✅ Kirim & Absen Hadir</button>
+  </div>
+
+  <!-- ===== DONE ===== -->
+  <div class="page done-wrap" id="pgDone">
+    <div class="done-icon">🎉</div>
+    <h2>Terima Kasih!</h2>
+    <p>Kehadiran & data Anda sudah tercatat. Silakan tunggu, Anda akan dipanggil untuk sesi interview.</p>
+  </div>
+
+</div>
+
+<script>
+/* ==============================
+   KONFIGURASI & KONSTANTA
+   ============================== */
+const API = 'https://lidan-co-id.pages.dev/api/contacts_filter_dinamis7';
+const KEY = 'admin';
+const TBL = 'interview';
+
+function gl(txt){ document.getElementById('gLoaderTxt').textContent = txt||'Mengirim...'; document.getElementById('gLoader').classList.add('on'); }
+function gh(){ document.getElementById('gLoader').classList.remove('on'); }
+
+function validasiField(id, ok){
+  const fg = document.getElementById('fg_'+id);
+  if(fg) fg.classList.toggle('err', !ok);
+  return ok;
+}
+
+/* Tampilkan field "alasan resign" hanya jika status = sudah_resign */
+document.querySelectorAll('input[name=status_kerja]').forEach(r=>{
+  r.addEventListener('change', ()=>{
+    const val = document.querySelector('input[name=status_kerja]:checked')?.value;
+    document.getElementById('fg_alasan_resign').style.display = (val==='sudah_resign') ? 'block' : 'none';
+  });
+});
+
+function nowIso(){ return new Date().toISOString(); }
+
+async function kirimAbsensi(){
+  const nama = document.getElementById('nama').value.trim();
+  const hp = document.getElementById('hp').value.trim();
+  const posisi = document.getElementById('posisi').value;
+  const statusKerja = document.querySelector('input[name=status_kerja]:checked')?.value || '';
+  const alasanResign = document.getElementById('alasan_resign').value.trim();
+  const gajiDiminta = document.getElementById('gaji_diminta').value.trim();
+  const gajiTerakhir = document.getElementById('gaji_terakhir').value.trim();
+  const mulaiKerja = document.getElementById('mulai_kerja').value;
+  const dinas = document.querySelector('input[name=dinas]:checked')?.value || '';
+  const kendaraan = Array.from(document.querySelectorAll('.kendaraan_chk:checked')).map(c=>c.value);
+  const sim = Array.from(document.querySelectorAll('.sim_chk:checked')).map(c=>c.value);
+  const dokumen = Array.from(document.querySelectorAll('.dok_chk:checked')).map(c=>c.value);
+  const refNama = document.getElementById('ref_nama').value.trim();
+  const refHp = document.getElementById('ref_hp').value.trim();
+  const jot = document.querySelector('input[name=jot]:checked')?.value || '';
+  const catatan = document.getElementById('catatan').value.trim();
+
+  let ok = true;
+  ok = validasiField('nama', nama.length>=3) && ok;
+  ok = validasiField('hp', hp.length>=9) && ok;
+  ok = validasiField('posisi', posisi!=='') && ok;
+  ok = validasiField('status_kerja', statusKerja!=='') && ok;
+  ok = validasiField('gaji_diminta', gajiDiminta!=='') && ok;
+  ok = validasiField('mulai_kerja', mulaiKerja!=='') && ok;
+  ok = validasiField('dinas', dinas!=='') && ok;
+  ok = validasiField('jot', jot!=='') && ok;
+  if(!ok){
+    alert('Masih ada isian wajib yang belum lengkap, mohon dicek kembali.');
+    return;
+  }
+
+  const detail = {
+    gaji_diminta: gajiDiminta,
+    gaji_terakhir: gajiTerakhir,
+    mulai_kerja: mulaiKerja,
+    dinas_luar_kota: dinas,
+    kendaraan: kendaraan,
+    sim: sim,
+    alasan_resign: alasanResign,
+    referensi_nama: refNama,
+    referensi_hp: refHp,
+    dokumen_siap: dokumen,
+    konfirmasi_jot: jot,
+    catatan: catatan,
+  };
+
+  const payload = {
+    x_01: nama,
+    x_02: hp,
+    x_03: posisi === 'bdo' ? 'Business Development Officer' : 'Sales & Marketing Executive',
+    x_04: nowIso(),
+    x_05: statusKerja,
+    x_06: JSON.stringify(detail),
+  };
+
+  const btn = document.getElementById('btnSubmit');
+  btn.disabled = true;
+  gl('Menyimpan absensi...');
+  try {
+    const res = await fetch(`${API}?table=${TBL}`, {
+      method:'POST', headers:{'Content-Type':'application/json','X-Custom-Auth':KEY}, body:JSON.stringify(payload)
+    }).then(r=>r.json());
+    gh();
+    if(!res || !res.success){
+      btn.disabled = false;
+      alert('Gagal menyimpan data. Silakan coba lagi.');
+      return;
+    }
+  } catch(e){
+    gh();
+    btn.disabled = false;
+    alert('Gagal menyimpan data (periksa koneksi Anda). Silakan coba lagi.');
+    return;
+  }
+
+  document.getElementById('pgForm').classList.add('hidden');
+  document.getElementById('pgDone').style.display = 'block';
+}
+</script>
+
+</body>
+</html>

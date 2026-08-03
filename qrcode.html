@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>QR Absensi Interview - Lidan Psikologi</title>
+<link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root{
+  --primary:#5b5ef4; --p2:#7c3aed; --dark:#0f172a; --muted:#64748b; --border:#e2e8f0; --bg:#f8fafc; --white:#fff;
+}
+*{box-sizing:border-box;font-family:'Plus Jakarta Sans',sans-serif;margin:0;padding:0;}
+body{
+  min-height:100vh;background:linear-gradient(135deg,#0f172a 0%,#312e81 55%,#5b5ef4 100%);
+  display:flex;align-items:center;justify-content:center;padding:24px;
+}
+.card{
+  background:var(--white);border-radius:24px;padding:40px 36px 34px;max-width:460px;width:100%;
+  text-align:center;box-shadow:0 30px 70px rgba(0,0,0,0.35);
+}
+.logo{width:56px;height:56px;background:linear-gradient(135deg,var(--primary),var(--p2));border-radius:16px;
+  display:flex;align-items:center;justify-content:center;font-size:26px;margin:0 auto 16px;
+  box-shadow:0 8px 20px rgba(91,94,244,0.3);}
+h1{font-size:19px;font-weight:900;color:var(--dark);letter-spacing:-0.3px;margin-bottom:4px;}
+.sub{font-size:12.5px;color:var(--muted);font-weight:600;margin-bottom:26px;}
+.qr-box{
+  background:var(--bg);border:1.5px solid var(--border);border-radius:20px;padding:20px;
+  display:inline-block;margin-bottom:22px;
+}
+.qr-box img{display:block;width:260px;height:260px;max-width:100%;border-radius:8px;}
+.instruksi{
+  background:#eef2ff;border:1px solid #c7d2fe;border-radius:14px;padding:16px 18px;text-align:left;
+  font-size:13px;color:#312e81;line-height:1.7;font-weight:600;
+}
+.instruksi b{display:block;margin-bottom:4px;font-size:13.5px;}
+.foot{margin-top:22px;font-size:11px;color:var(--muted);font-weight:600;}
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">🧠</div>
+  <h1>Absensi Kehadiran Interview</h1>
+  <div class="sub">Lidan Psikologi &middot; Sales &amp; Marketing / Business Development</div>
+
+  <div class="qr-box">
+    <!--
+      Sumber QR: QR Server API (gambar statis, tidak butuh library JS).
+      Isi parameter "data" di URL bawah = link tujuan absensi.
+      GANTI URL_ABSENSI di bawah ini sesuai alamat final absen.html Anda.
+    -->
+    <img id="qrImg" src="" alt="QR Code Absensi">
+  </div>
+
+  <div class="instruksi">
+    <b>📱 Cara mengisi:</b>
+    Scan QR code di atas dengan kamera HP Anda, lalu isi form absensi &amp; beberapa pertanyaan singkat sebelum dipanggil untuk interview.
+  </div>
+
+  <div class="foot">Jika QR tidak bisa discan, kunjungi langsung: <span id="urlText"></span></div>
+</div>
+
+<script>
+/* ==============================
+   KONFIGURASI
+   ============================== */
+// GANTI sesuai URL final halaman absensi Anda setelah di-deploy
+const URL_ABSENSI = 'https://rekrutmen.lidan.co.id/absen';
+
+const qrApiUrl = 'https://api.qrserver.com/v1/create-qr-code/?size=300x300&margin=8&data=' + encodeURIComponent(URL_ABSENSI);
+document.getElementById('qrImg').src = qrApiUrl;
+document.getElementById('urlText').textContent = URL_ABSENSI;
+</script>
+
+</body>
+</html>
