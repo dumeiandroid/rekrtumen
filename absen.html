@@ -217,11 +217,11 @@ body{background:var(--bg);color:var(--dark);}
     <div class="sec-block">
       <div class="sec-head"><div class="sec-num">5</div><h3>Konfirmasi Skema Kerja</h3></div>
 
-      <div class="fg" id="fg_jot">
-        <label>Sistem kerja posisi ini menggunakan masa training (JOT) di awal, dengan skema gaji berdasarkan kehadiran & capaian. Apakah Anda tetap bersedia dengan skema ini?</label>
+      <div class="fg" id="fg_ojt">
+        <label>Sistem kerja posisi ini menggunakan OJT (On the Job Training) selama 5 hari pertama, dilanjutkan dengan kontrak mitra dengan skema gaji berdasarkan kehadiran & capaian. Apakah Anda tetap bersedia dengan skema ini?</label>
         <div class="radio-row">
-          <label class="radio-opt"><input type="radio" name="jot" value="ya">Ya, Bersedia</label>
-          <label class="radio-opt"><input type="radio" name="jot" value="tidak">Tidak Bersedia</label>
+          <label class="radio-opt"><input type="radio" name="ojt" value="ya">Ya, Bersedia</label>
+          <label class="radio-opt"><input type="radio" name="ojt" value="tidak">Tidak Bersedia</label>
         </div>
         <div class="fg-errmsg">Wajib dipilih</div>
       </div>
@@ -286,7 +286,7 @@ async function kirimAbsensi(){
   const dokumen = Array.from(document.querySelectorAll('.dok_chk:checked')).map(c=>c.value);
   const refNama = document.getElementById('ref_nama').value.trim();
   const refHp = document.getElementById('ref_hp').value.trim();
-  const jot = document.querySelector('input[name=jot]:checked')?.value || '';
+  const ojt = document.querySelector('input[name=ojt]:checked')?.value || '';
   const catatan = document.getElementById('catatan').value.trim();
 
   let ok = true;
@@ -297,7 +297,7 @@ async function kirimAbsensi(){
   ok = validasiField('gaji_diminta', gajiDiminta!=='') && ok;
   ok = validasiField('mulai_kerja', mulaiKerja!=='') && ok;
   ok = validasiField('dinas', dinas!=='') && ok;
-  ok = validasiField('jot', jot!=='') && ok;
+  ok = validasiField('ojt', ojt!=='') && ok;
   if(!ok){
     alert('Masih ada isian wajib yang belum lengkap, mohon dicek kembali.');
     return;
@@ -314,7 +314,7 @@ async function kirimAbsensi(){
     referensi_nama: refNama,
     referensi_hp: refHp,
     dokumen_siap: dokumen,
-    konfirmasi_jot: jot,
+    konfirmasi_ojt: ojt,
     catatan: catatan,
   };
 
