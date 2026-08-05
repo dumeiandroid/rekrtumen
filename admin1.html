@@ -51,12 +51,6 @@ body{background:var(--bg);color:var(--dark);}
 .stat-card .num{font-size:22px;font-weight:900;letter-spacing:-0.5px;}
 .stat-card .lbl{font-size:11.5px;color:var(--muted);font-weight:700;margin-top:2px;}
 
-.tabs{display:flex;gap:8px;margin-bottom:20px;background:#eef0f6;padding:5px;border-radius:13px;width:max-content;max-width:100%;}
-.tab-btn{padding:10px 20px;border-radius:9px;font-size:13px;font-weight:800;color:var(--muted);cursor:pointer;border:none;background:transparent;font-family:inherit;white-space:nowrap;transition:0.15s;}
-.tab-btn.active{background:#fff;color:var(--primary);box-shadow:0 3px 10px rgba(15,23,42,0.08);}
-.view-panel{display:none;}
-.view-panel.active{display:block;}
-
 .toolbar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin-bottom:16px;}
 .toolbar input[type=text]{flex:1;min-width:200px;padding:11px 14px;border:1.5px solid var(--border);border-radius:10px;font-size:13.5px;outline:none;font-family:inherit;}
 .toolbar input[type=text]:focus{border-color:var(--primary);}
@@ -169,105 +163,40 @@ tbody tr:hover{background:rgba(91,94,244,0.05);}
     </div>
     <div class="top-r">
       <span id="whoAmI"></span>
-      <button class="btn btn-sm" onclick="refreshAktif()">↻ Refresh</button>
+      <button class="btn btn-sm" onclick="muatKandidat()">↻ Refresh</button>
       <button class="btn btn-sm" onclick="doLogout()">Keluar</button>
     </div>
   </div>
 
   <div class="body-pad">
-
-    <div class="tabs">
-      <button class="tab-btn active" id="tabBtnRekrut" onclick="switchTab('rekrut')">📝 Hasil Tes</button>
-      <button class="tab-btn" id="tabBtnAbsen" onclick="switchTab('absen')">🪪 Absensi Interview</button>
-      <button class="tab-btn" id="tabBtnKemampuan" onclick="switchTab('kemampuan')">🧠 Kemampuan</button>
+    <div class="stats-row">
+      <div class="stat-card"><div class="num" id="stTotal">0</div><div class="lbl">Total Selesai Tes</div></div>
+      <div class="stat-card"><div class="num" id="stDinilai">0</div><div class="lbl">Sudah Dinilai</div></div>
+      <div class="stat-card"><div class="num" id="stBelum">0</div><div class="lbl">Belum Dinilai</div></div>
+      <div class="stat-card"><div class="num" id="stPelanggar">0</div><div class="lbl">Ada Pelanggaran</div></div>
     </div>
 
-    <!-- ===== PANEL: HASIL TES ===== -->
-    <div class="view-panel active" id="viewRekrut">
-      <div class="stats-row">
-        <div class="stat-card"><div class="num" id="stTotal">0</div><div class="lbl">Total Selesai Tes</div></div>
-        <div class="stat-card"><div class="num" id="stDinilai">0</div><div class="lbl">Sudah Dinilai</div></div>
-        <div class="stat-card"><div class="num" id="stBelum">0</div><div class="lbl">Belum Dinilai</div></div>
-        <div class="stat-card"><div class="num" id="stPelanggar">0</div><div class="lbl">Ada Pelanggaran</div></div>
-      </div>
-
-      <div class="toolbar">
-        <input type="text" id="searchBox" placeholder="Cari nama, posisi, atau domisili..." oninput="renderTabel()">
-      </div>
-
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Posisi</th>
-              <th>Domisili</th>
-              <th>Selesai</th>
-              <th>Pelanggaran</th>
-              <th>Skor Total</th>
-              <th>Status</th>
-            </tr>
-          </thead>
-          <tbody id="tblBody"></tbody>
-        </table>
-        <div class="empty-state" id="emptyState" style="display:none;">Belum ada kandidat yang menyelesaikan tes.</div>
-      </div>
+    <div class="toolbar">
+      <input type="text" id="searchBox" placeholder="Cari nama, posisi, atau domisili..." oninput="renderTabel()">
     </div>
 
-    <!-- ===== PANEL: ABSENSI INTERVIEW ===== -->
-    <div class="view-panel" id="viewAbsen">
-      <div class="stats-row">
-        <div class="stat-card"><div class="num" id="stAbsTotal">0</div><div class="lbl">Total Absen</div></div>
-        <div class="stat-card"><div class="num" id="stAbsOjtYa">0</div><div class="lbl">Bersedia OJT</div></div>
-        <div class="stat-card"><div class="num" id="stAbsOjtTidak">0</div><div class="lbl">Tidak Bersedia OJT</div></div>
-        <div class="stat-card"><div class="num" id="stAbsResign">0</div><div class="lbl">Sudah Resign</div></div>
-      </div>
-
-      <div class="toolbar">
-        <input type="text" id="searchBoxAbsen" placeholder="Cari nama, posisi, atau no. HP..." oninput="renderTabelAbsen()">
-      </div>
-
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>Nama</th>
-              <th>Posisi</th>
-              <th>Status Kerja</th>
-              <th>Gaji Diminta</th>
-              <th>Waktu Absen</th>
-              <th>Kesiapan OJT</th>
-            </tr>
-          </thead>
-          <tbody id="tblBodyAbsen"></tbody>
-        </table>
-        <div class="empty-state" id="emptyStateAbsen" style="display:none;">Belum ada data absensi.</div>
-      </div>
+    <div class="tbl-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Nama</th>
+            <th>Posisi</th>
+            <th>Domisili</th>
+            <th>Selesai</th>
+            <th>Pelanggaran</th>
+            <th>Skor Total</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="tblBody"></tbody>
+      </table>
+      <div class="empty-state" id="emptyState" style="display:none;">Belum ada kandidat yang menyelesaikan tes.</div>
     </div>
-
-    <!-- ===== PANEL: KEMAMPUAN ===== -->
-    <div class="view-panel" id="viewKemampuan">
-      <div class="toolbar">
-        <input type="text" id="searchBoxKemampuan" placeholder="Cari nama..." oninput="renderTabelKemampuan()">
-      </div>
-
-      <div class="tbl-wrap">
-        <table>
-          <thead>
-            <tr>
-              <th>ID</th>
-              <th>Nama</th>
-              <th>IQ</th>
-              <th>Tanggal</th>
-              <th>Aksi</th>
-            </tr>
-          </thead>
-          <tbody id="tblBodyKemampuan"></tbody>
-        </table>
-        <div class="empty-state" id="emptyStateKemampuan" style="display:none;">Belum ada data kemampuan.</div>
-      </div>
-    </div>
-
   </div>
 </div>
 
@@ -287,36 +216,6 @@ tbody tr:hover{background:rgba(91,94,244,0.05);}
   </div>
 </div>
 
-<!-- ===================== MODAL DETAIL ABSENSI ===================== -->
-<div class="overlay" id="ovDetailAbsen">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="mdNamaAbsen">Detail Absensi</h3>
-      <span class="x" onclick="tutupModalAbsen()">&times;</span>
-    </div>
-    <div class="modal-body" id="mdBodyAbsen"></div>
-    <div class="modal-foot">
-      <span class="save-status"></span>
-      <button class="btn btn-outline btn-sm" onclick="tutupModalAbsen()">Tutup</button>
-    </div>
-  </div>
-</div>
-
-<!-- ===================== MODAL DETAIL KEMAMPUAN ===================== -->
-<div class="overlay" id="ovDetailKemampuan">
-  <div class="modal-box">
-    <div class="modal-head">
-      <h3 id="mdNamaKemampuan">Detail Kemampuan</h3>
-      <span class="x" onclick="tutupModalKemampuan()">&times;</span>
-    </div>
-    <div class="modal-body" id="mdBodyKemampuan"></div>
-    <div class="modal-foot">
-      <span class="save-status"></span>
-      <button class="btn btn-outline btn-sm" onclick="tutupModalKemampuan()">Tutup</button>
-    </div>
-  </div>
-</div>
-
 <script>
 /* ==============================
    KONFIGURASI
@@ -326,10 +225,6 @@ const CDN = 'https://assets.lidan.co.id/';
 const KEY = 'admin';
 const TBL_REKRUT = 'rekrutmen';
 const TBL_ADMIN  = 'admins';
-const TBL_INTERVIEW = 'interview';
-/* API kedua: sumber data hasil tes kemampuan/IQ (Psikogram), tabel berbeda meski nama sama */
-const API_PSIKOGRAM = 'https://lidan-co-id.pages.dev/api/db_psikogram1';
-const TBL_PSIKOGRAM = 'rekrutmen';
 const SESS_KEY   = 'rekrutmen_admin_session_v1';
 const SKOR_MAX_PER_SOAL = 10; // skala penilaian per jawaban (0-10)
 
@@ -379,41 +274,6 @@ let kandidatList = [];
 let activeRow = null;   // baris kandidat yang sedang dibuka di modal
 let activeScores = {};  // {qid: number}
 
-let interviewList = [];
-let interviewLoaded = false;
-
-let kemampuanList = [];
-let kemampuanLoaded = false;
-const ASPEK_KEMAMPUAN = ['Kemampuan Umum','Daya Tangkap Visual','Kemampuan Berpikir Logis','Kemampuan Berpikir Abstrak','Penalaran Verbal','Penalaran Numerik'];
-const ASPEK_KEY_KEMAMPUAN = ['kemampuan_umum','daya_tangkap_visual','kemampuan_berpikir_logis','kemampuan_berpikir_abstrak','penalaran_verbal','penalaran_numerik'];
-
-/* Label mapping untuk data absensi (sesuai opsi di absen.html) */
-const LBL_STATUS_KERJA = { masih_bekerja:'Masih Bekerja', sudah_resign:'Sudah Resign', belum_bekerja:'Belum Bekerja' };
-const LBL_MULAI_KERJA = { langsung:'Langsung / minggu ini', '2_minggu':'Sekitar 2 minggu lagi', '1_bulan':'Sekitar 1 bulan lagi', lebih_1_bulan:'Lebih dari 1 bulan' };
-const LBL_DINAS = { ya:'Bersedia', tidak:'Tidak Bersedia' };
-const LBL_OJT = { ya:'Ya, Bersedia', tidak:'Tidak Bersedia' };
-const LBL_KENDARAAN = { motor:'Motor', mobil:'Mobil', tidak_ada:'Tidak punya kendaraan pribadi' };
-const LBL_SIM = { sim_a:'SIM A', sim_c:'SIM C', tidak_ada:'Belum punya SIM' };
-const LBL_DOKUMEN = { ktp:'KTP', ijazah:'Ijazah', skck:'SKCK', cv:'CV', pas_foto:'Pas Foto' };
-
-/* ==============================
-   TAB SWITCH
-   ============================== */
-function switchTab(tab){
-  document.getElementById('tabBtnRekrut').classList.toggle('active', tab==='rekrut');
-  document.getElementById('tabBtnAbsen').classList.toggle('active', tab==='absen');
-  document.getElementById('tabBtnKemampuan').classList.toggle('active', tab==='kemampuan');
-  document.getElementById('viewRekrut').classList.toggle('active', tab==='rekrut');
-  document.getElementById('viewAbsen').classList.toggle('active', tab==='absen');
-  document.getElementById('viewKemampuan').classList.toggle('active', tab==='kemampuan');
-  if(tab==='absen' && !interviewLoaded){
-    muatAbsensi();
-  }
-  if(tab==='kemampuan' && !kemampuanLoaded){
-    muatKemampuan();
-  }
-}
-
 function gl(txt){ document.getElementById('gLoaderTxt').textContent = txt||'Memuat...'; document.getElementById('gLoader').classList.add('on'); }
 function gh(){ document.getElementById('gLoader').classList.remove('on'); }
 
@@ -429,13 +289,12 @@ function extractRows(res){
   return [];
 }
 
-async function ambilSemuaBaris(table, apiBase){
-  const base = apiBase || API;
+async function ambilSemuaBaris(table){
   let all = [];
   let offset = 0;
   const limit = 500;
   for(let i=0;i<40;i++){ // batas aman maksimum 20.000 baris
-    const res = await fetch(`${base}?table=${table}&limit=${limit}&offset=${offset}`,{
+    const res = await fetch(`${API}?table=${table}&limit=${limit}&offset=${offset}`,{
       headers:{'X-Custom-Auth':KEY}
     }).then(r=>r.json()).catch(()=>null);
     const rows = extractRows(res);
@@ -446,7 +305,7 @@ async function ambilSemuaBaris(table, apiBase){
   }
   // fallback: jika API tidak mendukung limit/offset (hanya mengembalikan semua di panggilan pertama)
   if(all.length === 0){
-    const res = await fetch(`${base}?table=${table}`,{ headers:{'X-Custom-Auth':KEY} }).then(r=>r.json()).catch(()=>null);
+    const res = await fetch(`${API}?table=${table}`,{ headers:{'X-Custom-Auth':KEY} }).then(r=>r.json()).catch(()=>null);
     all = extractRows(res);
   }
   return all;
@@ -612,246 +471,6 @@ function fmtTgl(iso){
   if(isNaN(d.getTime())) return '-';
   return d.toLocaleDateString('id-ID',{day:'2-digit',month:'short',year:'numeric'}) + ' ' + d.toLocaleTimeString('id-ID',{hour:'2-digit',minute:'2-digit'});
 }
-
-function refreshAktif(){
-  const absenAktif = document.getElementById('viewAbsen').classList.contains('active');
-  const kemampuanAktif = document.getElementById('viewKemampuan').classList.contains('active');
-  if(absenAktif) muatAbsensi();
-  else if(kemampuanAktif) muatKemampuan();
-  else muatKandidat();
-}
-
-/* ==============================
-   MUAT & TAMPILKAN DATA ABSENSI INTERVIEW
-   ============================== */
-async function muatAbsensi(){
-  gl('Memuat data absensi...');
-  try{
-    const rows = await ambilSemuaBaris(TBL_INTERVIEW);
-    interviewList = rows.slice();
-    // urutkan dari yang terbaru absen
-    interviewList.sort((a,b)=> String(b.x_04||'').localeCompare(String(a.x_04||'')));
-    interviewLoaded = true;
-    renderStatsAbsen();
-    renderTabelAbsen();
-  }catch(e){
-    document.getElementById('tblBodyAbsen').innerHTML = '';
-    document.getElementById('emptyStateAbsen').style.display = 'block';
-    document.getElementById('emptyStateAbsen').textContent = 'Gagal memuat data. Periksa koneksi Anda.';
-  }
-  gh();
-}
-
-function renderStatsAbsen(){
-  const total = interviewList.length;
-  let ojtYa = 0, ojtTidak = 0, resign = 0;
-  interviewList.forEach(r=>{
-    const d = safeParse(r.x_06, {});
-    if(d.konfirmasi_ojt === 'ya') ojtYa++;
-    if(d.konfirmasi_ojt === 'tidak') ojtTidak++;
-    if(String(r.x_05||'') === 'sudah_resign') resign++;
-  });
-  document.getElementById('stAbsTotal').textContent = total;
-  document.getElementById('stAbsOjtYa').textContent = ojtYa;
-  document.getElementById('stAbsOjtTidak').textContent = ojtTidak;
-  document.getElementById('stAbsResign').textContent = resign;
-}
-
-function renderTabelAbsen(){
-  const q = (document.getElementById('searchBoxAbsen').value||'').toLowerCase().trim();
-  const tbody = document.getElementById('tblBodyAbsen');
-  const filtered = interviewList.filter(r=>{
-    if(!q) return true;
-    const hay = `${r.x_01||''} ${r.x_03||''} ${r.x_02||''}`.toLowerCase();
-    return hay.includes(q);
-  });
-
-  document.getElementById('emptyStateAbsen').style.display = filtered.length ? 'none' : 'block';
-  if(!filtered.length){ tbody.innerHTML=''; if(interviewList.length) document.getElementById('emptyStateAbsen').textContent='Tidak ada data yang cocok dengan pencarian.'; return; }
-
-  tbody.innerHTML = filtered.map(r=>{
-    const d = safeParse(r.x_06, {});
-    const gaji = d.gaji_diminta ? ('Rp ' + Number(d.gaji_diminta).toLocaleString('id-ID')) : '-';
-    const ojt = d.konfirmasi_ojt;
-    return `
-      <tr data-id="${escHtml(idAttr(r))}">
-        <td class="nama-cell">${escHtml(r.x_01||'-')}
-          <div class="sub-cell">${escHtml(r.x_02||'')}</div>
-        </td>
-        <td>${escHtml(r.x_03||'-')}</td>
-        <td>${escHtml(LBL_STATUS_KERJA[r.x_05] || r.x_05 || '-')}</td>
-        <td>${gaji}</td>
-        <td>${fmtTgl(r.x_04)}</td>
-        <td>${ojt==='ya' ? '<span class="badge badge-green">Bersedia</span>'
-              : ojt==='tidak' ? '<span class="badge badge-red">Tidak Bersedia</span>'
-              : '<span class="badge badge-gray">-</span>'}</td>
-      </tr>
-    `;
-  }).join('');
-}
-
-document.getElementById('tblBodyAbsen').addEventListener('click', e=>{
-  const tr = e.target.closest('tr[data-id]');
-  if(tr) bukaModalAbsen(tr.getAttribute('data-id'));
-});
-
-function bukaModalAbsen(idX){
-  const row = interviewList.find(r => String(r.id_x) === String(idX));
-  if(!row) return;
-  const d = safeParse(row.x_06, {});
-
-  document.getElementById('mdNamaAbsen').textContent = row.x_01 || 'Detail Absensi';
-
-  const kendaraanTxt = (d.kendaraan||[]).map(v=>LBL_KENDARAAN[v]||v).join(', ') || '-';
-  const simTxt = (d.sim||[]).map(v=>LBL_SIM[v]||v).join(', ') || '-';
-  const dokumenTxt = (d.dokumen_siap||[]).map(v=>LBL_DOKUMEN[v]||v).join(', ') || '-';
-
-  const baris = (label, val) => `<div class="row"><span>${escHtml(label)}</span><b>${escHtml(val||'-')}</b></div>`;
-
-  const infoHtml = `
-    <div class="detail-info" style="margin-bottom:18px;">
-      ${baris('No. HP', row.x_02)}
-      ${baris('Posisi', row.x_03)}
-      ${baris('Waktu Absen', fmtTgl(row.x_04))}
-      ${baris('Status Kerja', LBL_STATUS_KERJA[row.x_05] || row.x_05)}
-      ${d.alasan_resign ? baris('Alasan Resign', d.alasan_resign) : ''}
-    </div>
-  `;
-
-  const secHtml = (title, rowsHtml) => `
-    <div class="qa-item">
-      <div class="q-sec">${escHtml(title)}</div>
-      <div class="detail-info">${rowsHtml}</div>
-    </div>
-  `;
-
-  const bodyHtml = infoHtml
-    + secHtml('Kesiapan & Ekspektasi',
-        baris('Gaji Diminta', d.gaji_diminta ? ('Rp ' + Number(d.gaji_diminta).toLocaleString('id-ID')) : '-')
-        + baris('Gaji Terakhir', d.gaji_terakhir ? ('Rp ' + Number(d.gaji_terakhir).toLocaleString('id-ID')) : '-')
-        + baris('Mulai Kerja', LBL_MULAI_KERJA[d.mulai_kerja] || d.mulai_kerja)
-        + baris('Bersedia Dinas Luar Kota', LBL_DINAS[d.dinas_luar_kota] || d.dinas_luar_kota))
-    + secHtml('Kendaraan & Mobilitas',
-        baris('Kendaraan', kendaraanTxt)
-        + baris('SIM', simTxt))
-    + secHtml('Dokumen & Referensi',
-        baris('Dokumen Siap', dokumenTxt)
-        + baris('Nama Referensi', d.referensi_nama)
-        + baris('HP Referensi', d.referensi_hp))
-    + secHtml('Konfirmasi Skema Kerja',
-        baris('Kesiapan OJT', LBL_OJT[d.konfirmasi_ojt] || d.konfirmasi_ojt)
-        + (d.catatan ? baris('Catatan Tambahan', d.catatan) : ''));
-
-  document.getElementById('mdBodyAbsen').innerHTML = bodyHtml;
-  document.getElementById('ovDetailAbsen').classList.add('open');
-}
-
-function tutupModalAbsen(){
-  document.getElementById('ovDetailAbsen').classList.remove('open');
-}
-
-document.getElementById('ovDetailAbsen').addEventListener('click', e=>{
-  if(e.target.id === 'ovDetailAbsen') tutupModalAbsen();
-});
-
-/* ==============================
-   MUAT & TAMPILKAN DATA KEMAMPUAN (IQ) — tabel 'rekrutmen' di API Psikogram
-   ============================== */
-function fmtTglLengkap(val){
-  // Catatan: x_11 pada tabel ini SUDAH berupa teks tanggal jadi (mis. "01 Agustus 2026
-  // pukul 04.09"), bukan ISO/timestamp mentah — jadi cukup ditampilkan apa adanya,
-  // tidak perlu di-parse ulang dengan new Date().
-  if(val === undefined || val === null || String(val).trim() === '') return '-';
-  return String(val);
-}
-
-async function muatKemampuan(){
-  gl('Memuat data kemampuan...');
-  try{
-    // Fetch persis seperti index_rekap.html (tanpa limit/offset — API ini tidak
-    // mendukung parameter tersebut, jika dipaksakan field seperti tanggal hilang)
-    const res = await fetch(`${API_PSIKOGRAM}?table=${TBL_PSIKOGRAM}`,{
-      headers:{'X-Custom-Auth':KEY,'Content-Type':'application/json'}
-    }).then(r=>r.json());
-    const rows = extractRows(res);
-    kemampuanList = rows.slice().sort((a,b)=> Number(b.id_x||0) - Number(a.id_x||0));
-    kemampuanLoaded = true;
-    renderTabelKemampuan();
-  }catch(e){
-    document.getElementById('tblBodyKemampuan').innerHTML = '';
-    document.getElementById('emptyStateKemampuan').style.display = 'block';
-    document.getElementById('emptyStateKemampuan').textContent = 'Gagal memuat data. Periksa koneksi Anda.';
-  }
-  gh();
-}
-
-function renderTabelKemampuan(){
-  const q = (document.getElementById('searchBoxKemampuan').value||'').toLowerCase().trim();
-  const tbody = document.getElementById('tblBodyKemampuan');
-  const filtered = kemampuanList.filter(row=>{
-    if(!q) return true;
-    const biodata = safeParse(row.x_02, {});
-    const nama = biodata.nama || biodata.name || '';
-    return nama.toLowerCase().includes(q);
-  });
-
-  document.getElementById('emptyStateKemampuan').style.display = filtered.length ? 'none' : 'block';
-  if(!filtered.length){ tbody.innerHTML=''; if(kemampuanList.length) document.getElementById('emptyStateKemampuan').textContent='Tidak ada nama yang cocok dengan pencarian.'; return; }
-
-  tbody.innerHTML = filtered.map(row=>{
-    const biodata = safeParse(row.x_02, {});
-    const nama = biodata.nama || biodata.name || '-';
-    const iq = row.x_06 || '-';
-    return `
-      <tr data-id="${escHtml(idAttr(row))}">
-        <td style="color:var(--muted);font-size:12px;">${escHtml(String(row.id_x||''))}</td>
-        <td class="nama-cell">${escHtml(nama)}</td>
-        <td><span class="score-pill" style="color:var(--blue);">${escHtml(String(iq))}</span></td>
-        <td>${escHtml(fmtTglLengkap(row.x_11))}</td>
-        <td><button class="btn btn-outline btn-sm" onclick="bukaModalKemampuan('${escHtml(idAttr(row))}')">👁️ View</button></td>
-      </tr>
-    `;
-  }).join('');
-}
-
-function bukaModalKemampuan(idX){
-  const row = kemampuanList.find(r => String(r.id_x) === String(idX));
-  if(!row) return;
-  const biodata = safeParse(row.x_02, {});
-  const skor = safeParse(row.x_03, {});
-  const nama = biodata.nama || biodata.name || '-';
-
-  document.getElementById('mdNamaKemampuan').textContent = nama || 'Detail Kemampuan';
-
-  const baris = (label, val) => `<div class="row"><span>${escHtml(label)}</span><b>${escHtml(String(val==null?'-':val))}</b></div>`;
-
-  let aspekHtml = ASPEK_KEMAMPUAN.map((label,i)=>{
-    const key = ASPEK_KEY_KEMAMPUAN[i];
-    return baris(label, skor[key] !== undefined ? skor[key] : '-');
-  }).join('');
-
-  const bodyHtml = `
-    <div class="detail-info" style="margin-bottom:12px;">
-      ${baris('Tanggal Tes', fmtTglLengkap(row.x_11))}
-      ${baris('Skor IQ', skor.skor_iq !== undefined ? skor.skor_iq : (row.x_06 || '-'))}
-    </div>
-    <div class="qa-item">
-      <div class="q-sec">Rincian Skor Kemampuan</div>
-      <div class="detail-info">${aspekHtml}</div>
-    </div>
-  `;
-
-  document.getElementById('mdBodyKemampuan').innerHTML = bodyHtml;
-  document.getElementById('ovDetailKemampuan').classList.add('open');
-}
-
-function tutupModalKemampuan(){
-  document.getElementById('ovDetailKemampuan').classList.remove('open');
-}
-
-document.getElementById('ovDetailKemampuan').addEventListener('click', e=>{
-  if(e.target.id === 'ovDetailKemampuan') tutupModalKemampuan();
-});
 
 /* ==============================
    MODAL DETAIL & PENILAIAN
